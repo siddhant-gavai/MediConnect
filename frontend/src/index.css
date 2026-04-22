@@ -1,0 +1,13 @@
+/* Simplified CSS for UI recovery */
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  color: #475569;
+}
+
+:root {
+  --primary: #2563EB;
+  --secondary: #0F172A;
+  --bg-hero: #EFF6FF;
+  --bg-alt: #F8FAFC;
+}

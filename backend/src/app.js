@@ -1,0 +1,59 @@
+const express = require('express');
+const cors = require('cors');
+const cookieParser = require('cookie-parser');
+const dotenv = require('dotenv');
+const { prisma } = require('./config/prisma');
+
+dotenv.config();
+
+const app = express();
+
+// Middleware
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:5174',
+  'http://localhost:5175',
+  process.env.FRONTEND_URL
+].filter(Boolean);
+
+app.use(cors({
+  origin: '*',
+  credentials: true
+}));
+
+setInterval(() => {}, 1000); // Keep event loop alive
+
+process.on('uncaughtException', (err) => {
+  console.error('UNCAUGHT EXCEPTION:', err);
+});
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+
+// Routes
+const authRoutes = require('./routes/auth.routes');
+const doctorRoutes = require('./routes/doctor.routes');
+const appointmentRoutes = require('./routes/appointment.routes');
+const adminRoutes = require('./routes/admin.routes');
+const reviewRoutes = require('./routes/review.routes');
+
+app.use('/api/auth', authRoutes);
+app.use('/api/doctors', doctorRoutes);
+app.use('/api/appointments', appointmentRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/reviews', reviewRoutes);
+
+// Error Handling Middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  const status = err.statusCode || 500;
+  const message = err.message || 'Internal Server Error';
+  res.status(status).json({ success: false, message });
+});
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
+
+module.exports = { app, prisma };
