@@ -1,16 +1,22 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import api from '../api/axios';
 import { useAuth } from '../context/AuthContext';
 import { 
   Stethoscope, Search, MapPin, Calendar, Heart, Brain, Bone, 
   Eye, Baby, Sun, Activity, Star, ArrowRight, Github, 
-  Twitter, Linkedin, Facebook, MapPin as MapPinIcon, Phone, Mail 
+  Twitter, Linkedin, Facebook, MapPin as MapPinIcon, Phone, Mail, User
 } from 'lucide-react';
 
 const Home = () => {
+  const navigate = useNavigate();
   const { user, logout } = useAuth();
   const [doctors, setDoctors] = useState([]);
+  const [searchParams, setSearchParams] = useState({
+    speciality: '',
+    location: '',
+    date: ''
+  });
 
   useEffect(() => {
     const fetchTopDoctors = async () => {
@@ -27,46 +33,37 @@ const Home = () => {
   }, []);
 
   const specialities = [
-    { name: 'Cardiology', icon: Heart, count: 120 },
-    { name: 'Neurology', icon: Brain, count: 85 },
-    { name: 'Orthopedic', icon: Bone, count: 94 },
-    { name: 'Ophthalmology', icon: Eye, count: 76 },
-    { name: 'Pediatrics', icon: Baby, count: 142 },
-    { name: 'Dermatology', icon: Sun, count: 110 },
-    { name: 'Dental', icon: Activity, count: 156 },
-    { name: 'Psychiatry', icon: Brain, count: 64 },
+    { name: 'Cardiology', icon: Heart, count: 120, slug: 'Cardiology' },
+    { name: 'Neurology', icon: Brain, count: 85, slug: 'Neurology' },
+    { name: 'Orthopedic', icon: Bone, count: 94, slug: 'Orthopedic' },
+    { name: 'Ophthalmology', icon: Eye, count: 76, slug: 'Ophthalmology' },
+    { name: 'Pediatrics', icon: Baby, count: 142, slug: 'Pediatrics' },
+    { name: 'Dermatology', icon: Sun, count: 110, slug: 'Dermatology' },
+    { name: 'Dental', icon: Activity, count: 156, slug: 'Dental' },
+    { name: 'Psychiatry', icon: Brain, count: 64, slug: 'Psychiatry' },
   ];
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    const query = new URLSearchParams();
+    if (searchParams.speciality) query.set('specialization', searchParams.speciality);
+    if (searchParams.location) query.set('location', searchParams.location);
+    if (searchParams.date) query.set('date', searchParams.date);
+    navigate(`/doctors?${query.toString()}`);
+  };
+
+
+  const scrollToSection = (id) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   return (
     <div className="flex flex-col min-h-screen text-[#475569]">
       {/* 1. NAVBAR */}
-      <nav className="sticky top-0 z-50 bg-white border-b border-[#E2E8F0]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16 items-center">
-            <Link to="/" className="flex items-center gap-2">
-              <Stethoscope className="h-8 w-8 text-[#2563EB]" />
-              <span className="text-xl font-extrabold text-[#0F172A]">MediConnect</span>
-            </Link>
-            
-            <div className="hidden md:flex items-center space-x-8 text-sm font-semibold text-[#475569]">
-              <Link to="/doctors" className="hover:text-[#2563EB] transition-colors font-bold">Find Doctors</Link>
-              <Link to="#" className="hover:text-[#2563EB] transition-colors font-bold">Specialities</Link>
-              <Link to="#" className="hover:text-[#2563EB] transition-colors font-bold">About</Link>
-            </div>
-
-            <div className="flex items-center gap-4">
-              {user ? (
-                <button onClick={logout} className="text-sm font-bold text-[#0F172A] hover:text-[#2563EB]">Sign Out</button>
-              ) : (
-                <>
-                  <Link to="/login" className="text-sm font-bold text-[#0F172A] hover:text-[#2563EB]">Sign In</Link>
-                  <Link to="/register" className="bg-[#2563EB] text-white px-5 py-2 rounded-lg text-sm font-bold hover:bg-blue-700 transition shadow-sm">Get Started</Link>
-                </>
-              )}
-            </div>
-          </div>
-        </div>
-      </nav>
+      {/* Navbar is now global in App.jsx */}
 
       {/* 2. HERO SECTION */}
       <section className="bg-[#EFF6FF] py-16 lg:py-24">
@@ -86,7 +83,12 @@ const Home = () => {
                 <Link to="/doctors" className="bg-[#2563EB] text-white px-8 py-3.5 rounded-xl font-bold flex items-center gap-2 hover:bg-blue-700 transition shadow-md">
                   Book Appointment <ArrowRight className="h-5 w-5" />
                 </Link>
-                <button className="border border-[#2563EB] text-[#2563EB] px-8 py-3.5 rounded-xl font-bold hover:bg-blue-50 transition">How it works</button>
+                <button 
+                  onClick={() => scrollToSection('how-it-works')}
+                  className="border border-[#2563EB] text-[#2563EB] px-8 py-3.5 rounded-xl font-bold hover:bg-blue-50 transition"
+                >
+                  How it works
+                </button>
               </div>
             </div>
 
@@ -130,26 +132,46 @@ const Home = () => {
       {/* 3. SEARCH BAR SECTION */}
       <div className="max-w-5xl mx-auto px-4 -mt-10 relative z-30">
         <div className="bg-white p-4 rounded-2xl border border-[#E2E8F0] shadow-xl grid md:grid-cols-4 gap-2">
-          <div className="flex items-center gap-3 px-4 py-3 bg-[#F8FAFC] rounded-xl border border-transparent focus-within:border-[#2563EB] transition gap-1">
+          <div className="flex items-center gap-3 px-4 py-3 bg-[#F8FAFC] rounded-xl border border-transparent focus-within:border-[#2563EB] transition">
             <Search className="h-5 w-5 text-[#475569]" />
-            <input type="text" placeholder="Speciality / Name" className="bg-transparent border-none outline-none text-sm font-bold w-full" />
+            <input 
+              type="text" 
+              placeholder="Speciality / Name" 
+              className="bg-transparent border-none outline-none text-sm font-bold w-full"
+              value={searchParams.speciality}
+              onChange={(e) => setSearchParams({ ...searchParams, speciality: e.target.value })}
+            />
           </div>
-          <div className="flex items-center gap-3 px-4 py-3 bg-[#F8FAFC] rounded-xl border border-transparent focus-within:border-[#2563EB] transition gap-1">
+          <div className="flex items-center gap-3 px-4 py-3 bg-[#F8FAFC] rounded-xl border border-transparent focus-within:border-[#2563EB] transition">
             <MapPin className="h-5 w-5 text-[#475569]" />
-            <input type="text" placeholder="Location" className="bg-transparent border-none outline-none text-sm font-bold w-full" />
+            <input 
+              type="text" 
+              placeholder="Location" 
+              className="bg-transparent border-none outline-none text-sm font-bold w-full"
+              value={searchParams.location}
+              onChange={(e) => setSearchParams({ ...searchParams, location: e.target.value })}
+            />
           </div>
-          <div className="flex items-center gap-3 px-4 py-3 bg-[#F8FAFC] rounded-xl border border-transparent focus-within:border-[#2563EB] transition gap-1">
+          <div className="flex items-center gap-3 px-4 py-3 bg-[#F8FAFC] rounded-xl border border-transparent focus-within:border-[#2563EB] transition">
             <Calendar className="h-5 w-5 text-[#475569]" />
-            <input type="text" placeholder="Date" className="bg-transparent border-none outline-none text-sm font-bold w-full" />
+            <input 
+              type="date" 
+              className="bg-transparent border-none outline-none text-sm font-bold w-full text-[#475569]"
+              value={searchParams.date}
+              onChange={(e) => setSearchParams({ ...searchParams, date: e.target.value })}
+            />
           </div>
-          <button className="bg-[#2563EB] text-white py-3 rounded-xl font-bold hover:bg-blue-700 transition shadow-lg flex items-center justify-center gap-2">
+          <button 
+            onClick={handleSearch}
+            className="bg-[#2563EB] text-white py-3 rounded-xl font-bold hover:bg-blue-700 transition shadow-lg flex items-center justify-center gap-2"
+          >
             <Search className="h-5 w-5" /> Search
           </button>
         </div>
       </div>
 
       {/* 4. SPECIALITIES SECTION */}
-      <section className="py-24 bg-white">
+      <section id="specialities" className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16 space-y-4">
             <h2 className="text-3xl font-black text-[#0F172A]">Browse by Speciality</h2>
@@ -157,12 +179,62 @@ const Home = () => {
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4">
             {specialities.map((spec, i) => (
-              <div key={i} className="group p-6 rounded-2xl border border-[#E2E8F0] hover:border-[#2563EB] hover:shadow-lg transition cursor-pointer text-center bg-white">
+              <div 
+                key={i} 
+                onClick={() => navigate(`/doctors?specialization=${spec.slug}`)}
+                className="group p-6 rounded-2xl border border-[#E2E8F0] hover:border-[#2563EB] hover:shadow-lg transition-all hover:-translate-y-1 cursor-pointer text-center bg-white"
+              >
                 <div className="bg-[#F8FAFC] p-4 rounded-xl group-hover:bg-[#EFF6FF] transition mb-4 inline-block">
                   <spec.icon className="h-8 w-8 text-[#2563EB]" />
                 </div>
                 <h4 className="text-sm font-bold text-[#0F172A]">{spec.name}</h4>
                 <p className="text-[10px] font-bold text-[#475569] mt-1 uppercase tracking-tighter">{spec.count} Doctors</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* NEW: HOW IT WORKS SECTION */}
+      <section id="how-it-works" className="py-24 bg-white border-t border-[#E2E8F0]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16 space-y-4">
+            <h2 className="text-3xl font-black text-[#0F172A]">How it Works</h2>
+            <p className="text-[#475569] max-w-2xl mx-auto font-medium">Get the medical care you need in just three simple steps.</p>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-12">
+            {[
+              { 
+                title: 'Search Specialists', 
+                desc: 'Find the right doctor based on speciality, location, or availability.',
+                icon: Search,
+                color: 'bg-blue-100 text-blue-600'
+              },
+              { 
+                title: 'Review Profiles', 
+                desc: 'Check doctor ratings, experience, and consultation fees before booking.',
+                icon: User,
+                color: 'bg-green-100 text-green-600'
+              },
+              { 
+                title: 'Book Instantly', 
+                desc: 'Schedule your appointment with a single click and get confirmation.',
+                icon: Calendar,
+                color: 'bg-purple-100 text-purple-600'
+              }
+            ].map((step, i) => (
+              <div key={i} className="relative text-center space-y-6 p-8 rounded-3xl border border-[#E2E8F0] hover:shadow-xl transition group">
+                <div className={`h-16 w-16 ${step.color} rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition`}>
+                  <step.icon className="h-8 w-8" />
+                </div>
+                <h3 className="text-xl font-bold text-[#0F172A]">{step.title}</h3>
+                <p className="text-[#475569] text-sm leading-relaxed">{step.desc}</p>
+                {i < 2 && (
+                  <div className="hidden lg:block absolute top-1/2 -right-6 -translate-y-1/2 text-[#E2E8F0]">
+                    <ArrowRight className="h-8 w-8" />
+                  </div>
+                )}
               </div>
             ))}
           </div>
@@ -245,8 +317,8 @@ const Home = () => {
               <h4 className="font-bold text-white mb-6">Quick Links</h4>
               <ul className="space-y-3 text-sm text-slate-400 font-medium">
                 <li><Link to="/doctors" className="hover:text-white transition">Find Doctors</Link></li>
-                <li><Link to="#" className="hover:text-white transition">Specialities</Link></li>
-                <li><Link to="#" className="hover:text-white transition">How it Works</Link></li>
+                <li><button onClick={() => scrollToSection('specialities')} className="hover:text-white transition text-left">Specialities</button></li>
+                <li><button onClick={() => scrollToSection('how-it-works')} className="hover:text-white transition text-left">How it Works</button></li>
                 <li><Link to="#" className="hover:text-white transition">Privacy Policy</Link></li>
               </ul>
             </div>
@@ -254,10 +326,10 @@ const Home = () => {
             <div>
               <h4 className="font-bold text-white mb-6">Services</h4>
               <ul className="space-y-3 text-sm text-slate-400 font-medium">
-                <li><Link to="#" className="hover:text-white transition">Cardiology</Link></li>
-                <li><Link to="#" className="hover:text-white transition">Dermatology</Link></li>
-                <li><Link to="#" className="hover:text-white transition">Pediatrics</Link></li>
-                <li><Link to="#" className="hover:text-white transition">Mental Health</Link></li>
+                <li><Link to="/doctors?specialization=Cardiology" className="hover:text-white transition">Cardiology</Link></li>
+                <li><Link to="/doctors?specialization=Dermatology" className="hover:text-white transition">Dermatology</Link></li>
+                <li><Link to="/doctors?specialization=Pediatrics" className="hover:text-white transition">Pediatrics</Link></li>
+                <li><Link to="/doctors?specialization=Psychiatry" className="hover:text-white transition">Mental Health</Link></li>
               </ul>
             </div>
 
