@@ -13,6 +13,9 @@ import DoctorDashboard from './pages/doctor/Dashboard';
 import AdminDashboard from './pages/admin/Dashboard';
 import ManageSlots from './pages/doctor/ManageSlots';
 import ManageDoctors from './pages/admin/ManageDoctors';
+import Booking from './pages/Booking';
+import BookingConfirmed from './pages/BookingConfirmed';
+import MyBookings from './pages/MyBookings';
 import Navbar from './components/Navbar';
 
 function App() {
@@ -29,6 +32,9 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/doctors" element={<Doctors />} />
             <Route path="/doctors/:id" element={<DoctorProfile />} />
+            <Route path="/book/:id" element={<Booking />} />
+            <Route path="/booking-confirmed" element={<BookingConfirmed />} />
+            <Route path="/my-bookings" element={<MyBookings />} />
 
             {/* Dashboards (with simple ProtectedRoute in logic if needed, or self-contained) */}
             <Route path="/patient/dashboard" element={<PatientDashboard />} />
