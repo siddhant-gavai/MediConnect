@@ -13,6 +13,7 @@ import DoctorDashboard from './pages/doctor/Dashboard';
 import AdminDashboard from './pages/admin/Dashboard';
 import ManageSlots from './pages/doctor/ManageSlots';
 import ManageDoctors from './pages/admin/ManageDoctors';
+import Navbar from './components/Navbar';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
       <AuthProvider>
         <div className="min-h-screen bg-white">
           <Toaster position="top-right" />
+          <Navbar />
           <Routes>
             {/* All pages will now be self-contained or use elements within Home */}
             <Route path="/" element={<Home />} />
