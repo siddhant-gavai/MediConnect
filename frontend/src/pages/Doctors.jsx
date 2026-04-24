@@ -186,7 +186,7 @@ const Doctors = () => {
                       <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest leading-none mb-1">Consultation Fee</p>
                       <p className="text-lg font-black text-secondary">${doc.doctorProfile?.fees}</p>
                     </div>
-                    <Link to={`/doctors/${doc.id}`} className="px-6 py-3 bg-primary/5 text-primary font-bold rounded-xl group-hover:bg-primary group-hover:text-white transition-all text-sm flex items-center gap-2">
+                    <Link to={`/book/${doc.id}`} className="px-6 py-3 bg-primary/5 text-primary font-bold rounded-xl group-hover:bg-primary group-hover:text-white transition-all text-sm flex items-center gap-2">
                       Book Now
                       <ArrowRight className="h-4 w-4" />
                     </Link>
