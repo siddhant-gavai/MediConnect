@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import api from '../api/axios';
 import { 
   Search, Filter, Star, Clock, User, ChevronRight, 
@@ -10,16 +10,24 @@ import { cn } from '../utils/cn';
 import toast from 'react-hot-toast';
 
 const Doctors = () => {
+  const [searchParams] = useSearchParams();
   const [doctors, setDoctors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({
-    search: '',
-    specialization: '',
+    search: searchParams.get('search') || '',
+    specialization: searchParams.get('specialization') || '',
   });
 
   useEffect(() => {
+    setFilters({
+      search: searchParams.get('search') || '',
+      specialization: searchParams.get('specialization') || '',
+    });
+  }, [searchParams]);
+
+  useEffect(() => {
     fetchDoctors();
-  }, []);
+  }, [filters]);
 
   const fetchDoctors = async () => {
     try {
