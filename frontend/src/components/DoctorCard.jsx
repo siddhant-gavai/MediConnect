@@ -1,9 +1,10 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Star, MapPin, Building2, Clock, IndianRupee, ArrowRight } from 'lucide-react';
 
 const DoctorCard = ({ doctor }) => {
+  const navigate = useNavigate();
   const getInitials = (name) => {
     return name
       .split(' ')
@@ -102,13 +103,13 @@ const DoctorCard = ({ doctor }) => {
 
       {/* Footer Section: Actions */}
       <div className="p-5 pt-0 mt-auto space-y-3">
-        <Link
-          to={`/book/${doctor.id}`}
+        <button
+          onClick={() => navigate(`/book/${doctor.id}`)}
           className="w-full bg-[#1565C0] text-white py-3.5 rounded-xl font-black text-sm flex items-center justify-center gap-2 hover:bg-blue-800 transition shadow-lg shadow-blue-100"
         >
           Book Appointment
           <ArrowRight size={16} />
-        </Link>
+        </button>
         <Link
           to={`/doctor/${doctor.id}`}
           className="w-full text-center block text-sm font-black text-[#1565C0] hover:text-blue-800 transition uppercase tracking-widest py-1"

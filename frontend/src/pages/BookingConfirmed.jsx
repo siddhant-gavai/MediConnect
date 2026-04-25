@@ -1,166 +1,149 @@
+import React, { useEffect } from 'react';
 import { useLocation, Link, Navigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { 
-  CheckCircle, Calendar, Clock, MapPin, 
-  Download, ArrowRight, Home, List 
-} from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { Check, Calendar, Clock, IndianRupee, MapPin, Building2, LayoutGrid, Search } from 'lucide-react';
 
 const BookingConfirmed = () => {
   const location = useLocation();
-  const { booking, doctor } = location.state || {};
-  const [showAnimation, setShowAnimation] = useState(false);
+  const booking = location.state?.booking;
 
-  useEffect(() => {
-    setShowAnimation(true);
-  }, []);
-
-  if (!booking) {
-    return <Navigate to="/" replace />;
-  }
-
-  const generateICS = () => {
-    const { doctorName, date, time } = booking;
-    const startDateTime = `${date.replace(/-/g, '')}T${time.split(':')[0]}0000`;
-    const endDateTime = `${date.replace(/-/g, '')}T${parseInt(time.split(':')[0]) + 1}0000`;
-
-    const icsContent = [
-      'BEGIN:VCALENDAR',
-      'VERSION:2.0',
-      'BEGIN:VEVENT',
-      `SUMMARY:Medical Appointment with ${doctorName}`,
-      `DTSTART:${startDateTime}`,
-      `DTEND:${endDateTime}`,
-      'LOCATION:Central Medical Center, NY',
-      `DESCRIPTION:Appointment with ${doctorName} (${booking.speciality})`,
-      'END:VEVENT',
-      'END:VCALENDAR'
-    ].join('\n');
-
-    const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
-    const link = document.createElement('a');
-    link.href = window.URL.createObjectURL(blob);
-    link.setAttribute('download', `appointment-${booking.id}.ics`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
+  if (!booking) return <Navigate to="/doctors" />;
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] py-20 px-4">
-      <div className="max-w-2xl mx-auto">
-        <div className="bg-white rounded-[40px] shadow-2xl shadow-blue-100/50 overflow-hidden border border-white">
-          <div className="bg-blue-600 p-12 text-center relative overflow-hidden">
-            {/* Success Animation Container */}
-            <motion.div 
-              initial={{ scale: 0.5, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ type: "spring", damping: 12 }}
-              className="relative z-10"
-            >
-              <div className="h-24 w-24 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center mx-auto mb-6 relative">
-                <motion.div
-                  initial={{ pathLength: 0 }}
-                  animate={{ pathLength: 1 }}
-                  transition={{ duration: 1, delay: 0.5 }}
-                >
-                  <CheckCircle className="h-12 w-12 text-white" />
-                </motion.div>
-                {/* CSS Animation: Pulse Ring */}
-                <div className="absolute inset-0 rounded-full border-4 border-white/30 animate-ping" />
-              </div>
-              <h1 className="text-3xl font-black text-white uppercase tracking-tight">Booking Confirmed!</h1>
-              <p className="text-blue-100 font-bold mt-2">Your appointment has been successfully scheduled.</p>
-            </motion.div>
-
-            {/* Decorative circles */}
-            <div className="absolute -top-12 -right-12 h-40 w-40 bg-white/10 rounded-full blur-3xl" />
-            <div className="absolute -bottom-12 -left-12 h-40 w-40 bg-blue-400/20 rounded-full blur-3xl" />
-          </div>
-
-          <div className="p-12 space-y-10">
-            <div className="grid grid-cols-2 gap-8">
-              <div className="space-y-1">
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Booking ID</p>
-                <p className="text-lg font-black text-slate-900 tracking-tight">#{booking.id}</p>
-              </div>
-              <div className="space-y-1 text-right">
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Consultation Fee</p>
-                <p className="text-2xl font-black text-blue-600">${booking.fee}</p>
-              </div>
-            </div>
-
-            <div className="space-y-6">
-              <div className="flex items-start gap-4 p-6 bg-slate-50 rounded-3xl border border-slate-100">
-                <div className="h-12 w-12 rounded-2xl bg-white flex items-center justify-center text-blue-600 shadow-sm border border-slate-100">
-                  <Calendar className="h-6 w-6" />
-                </div>
-                <div>
-                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Appointment Date</p>
-                  <p className="text-sm font-black text-slate-900">{new Date(booking.date).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
-                  <div className="flex items-center gap-2 mt-1 text-xs font-bold text-slate-500">
-                    <Clock className="h-3.5 w-3.5" />
-                    {booking.time}
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-4 p-6 bg-slate-50 rounded-3xl border border-slate-100">
-                <div className="h-12 w-12 rounded-2xl bg-white flex items-center justify-center text-blue-600 shadow-sm border border-slate-100">
-                  <MapPin className="h-6 w-6" />
-                </div>
-                <div>
-                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Location</p>
-                  <p className="text-sm font-black text-slate-900">Central Medical Center</p>
-                  <p className="text-xs font-bold text-slate-500 mt-1">123 Health Ave, Medical District, NY 10001</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="pt-6 flex flex-col gap-4">
-              <button 
-                onClick={generateICS}
-                className="w-full py-4 bg-slate-900 text-white rounded-2xl font-black flex items-center justify-center gap-2 hover:bg-slate-800 transition shadow-xl"
-              >
-                <Download className="h-5 w-5" /> Add to Calendar
-              </button>
-              
-              <div className="grid grid-cols-2 gap-4">
-                <Link 
-                  to="/my-bookings"
-                  className="py-4 bg-white border-2 border-slate-100 text-slate-600 rounded-2xl font-black flex items-center justify-center gap-2 hover:bg-slate-50 transition"
-                >
-                  <List className="h-5 w-5" /> My Bookings
-                </Link>
-                <Link 
-                  to="/"
-                  className="py-4 bg-white border-2 border-slate-100 text-slate-600 rounded-2xl font-black flex items-center justify-center gap-2 hover:bg-slate-50 transition"
-                >
-                  <Home className="h-5 w-5" /> Go Home
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="mt-12 text-center space-y-4">
-          <p className="text-sm text-slate-400 font-bold uppercase tracking-widest">What's Next?</p>
-          <div className="flex justify-center gap-8">
-            <div className="flex flex-col items-center gap-2">
-              <div className="h-8 w-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-xs font-bold">1</div>
-              <p className="text-[10px] font-black text-slate-500 uppercase">Arrive Early</p>
-            </div>
-            <div className="flex flex-col items-center gap-2 text-slate-300">
-              <div className="h-8 w-8 rounded-full border border-slate-200 flex items-center justify-center text-xs font-bold">2</div>
-              <p className="text-[10px] font-black uppercase">Check-in</p>
-            </div>
-            <div className="flex flex-col items-center gap-2 text-slate-300">
-              <div className="h-8 w-8 rounded-full border border-slate-200 flex items-center justify-center text-xs font-bold">3</div>
-              <p className="text-[10px] font-black uppercase">Consultation</p>
-            </div>
-          </div>
-        </div>
+    <div className="min-h-screen bg-[#F8FAFC] flex items-center justify-center py-20 px-4 overflow-hidden relative">
+      
+      {/* CSS Confetti Animation */}
+      <div className="confetti-container">
+        {[...Array(50)].map((_, i) => (
+          <div key={i} className={`confetti piece-${i}`} />
+        ))}
       </div>
+
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="max-w-xl w-full bg-white rounded-[40px] shadow-2xl border border-slate-100 p-10 text-center relative z-10"
+      >
+        {/* Animated Checkmark */}
+        <div className="flex justify-center mb-8">
+          <div className="h-24 w-24 rounded-full bg-green-50 flex items-center justify-center relative">
+            <motion.div 
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: 0.2, type: 'spring' }}
+              className="h-16 w-16 rounded-full bg-green-500 flex items-center justify-center shadow-lg shadow-green-100"
+            >
+              <Check size={40} className="text-white" />
+            </motion.div>
+            <div className="absolute inset-0 border-4 border-green-500 rounded-full animate-ping opacity-20" />
+          </div>
+        </div>
+
+        <div className="space-y-4 mb-10">
+          <h1 className="text-3xl font-black text-green-700 uppercase tracking-tight">Appointment Confirmed!</h1>
+          <p className="text-slate-500 font-bold">You will receive a confirmation on your email shortly.</p>
+          
+          <div className="inline-block bg-blue-50 px-6 py-2 rounded-full border border-blue-100 mt-4">
+            <p className="text-sm font-black text-[#1565C0] uppercase tracking-[0.2em]">
+              Booking ID: <span className="text-blue-700">{booking.id}</span>
+            </p>
+          </div>
+        </div>
+
+        {/* Summary Card */}
+        <div className="bg-slate-50 rounded-3xl p-8 text-left space-y-6 mb-10 border border-slate-100">
+          <div className="flex justify-between items-start">
+            <div className="space-y-1">
+              <h3 className="text-xl font-black text-slate-900 uppercase tracking-tight">{booking.doctorName}</h3>
+              <p className="text-xs font-bold text-[#1565C0] uppercase tracking-widest">{booking.speciality} • {booking.hospital}</p>
+            </div>
+            <div className="bg-white p-2 rounded-xl shadow-sm border border-slate-100">
+              <div className="h-10 w-10 bg-[#1565C0] rounded-lg flex items-center justify-center text-white font-black">
+                {booking.doctorName.split(' ').map(n => n[0]).join('')}
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4 pt-4 border-t border-slate-200">
+            <div className="flex items-center gap-3">
+              <Calendar size={18} className="text-slate-400" />
+              <div>
+                <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Date</p>
+                <p className="text-sm font-black text-slate-700">{new Date(booking.date).toLocaleDateString('en-US', { weekday: 'long', day: 'numeric', month: 'short' })}</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <Clock size={18} className="text-slate-400" />
+              <div>
+                <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Time</p>
+                <p className="text-sm font-black text-slate-700">{booking.time}</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <IndianRupee size={18} className="text-slate-400" />
+              <div>
+                <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Amount Paid</p>
+                <p className="text-sm font-black text-slate-700">₹{booking.fee}</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <MapPin size={18} className="text-slate-400" />
+              <div>
+                <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Location</p>
+                <p className="text-sm font-black text-slate-700 truncate max-w-[120px]">Hospital Facility</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex flex-col sm:flex-row gap-4">
+          <Link 
+            to="/my-bookings" 
+            className="flex-1 bg-white border-2 border-slate-100 px-8 py-4 rounded-2xl font-black text-slate-600 hover:bg-slate-50 transition flex items-center justify-center gap-2"
+          >
+            <LayoutGrid size={20} /> View My Bookings
+          </Link>
+          <Link 
+            to="/doctors" 
+            className="flex-1 bg-[#1565C0] text-white px-8 py-4 rounded-2xl font-black shadow-xl shadow-blue-100 hover:bg-blue-800 transition flex items-center justify-center gap-2"
+          >
+            <Search size={20} /> Book Another
+          </Link>
+        </div>
+      </motion.div>
+
+      <style jsx>{`
+        .confetti-container {
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+        }
+        .confetti {
+          position: absolute;
+          width: 10px;
+          height: 10px;
+          background-color: #f2d74e;
+          top: -10px;
+          opacity: 0;
+        }
+        ${[...Array(50)].map((_, i) => {
+          const color = ['#f2d74e', '#95c3de', '#ff9a91', '#f2d74e', '#59d9a1'][i % 5];
+          const left = Math.random() * 100;
+          const duration = 2 + Math.random() * 3;
+          const delay = Math.random() * 2;
+          return `
+            .piece-${i} {
+              background-color: ${color};
+              left: ${left}%;
+              animation: fall ${duration}s ease-out ${delay}s infinite;
+            }
+          `;
+        }).join('')}
+        @keyframes fall {
+          0% { transform: translateY(0) rotate(0); opacity: 1; }
+          100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
+      `}</style>
     </div>
   );
 };

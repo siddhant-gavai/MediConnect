@@ -13,7 +13,7 @@ import DoctorDashboard from './pages/doctor/Dashboard';
 import AdminDashboard from './pages/admin/Dashboard';
 import ManageSlots from './pages/doctor/ManageSlots';
 import ManageDoctors from './pages/admin/ManageDoctors';
-import Booking from './pages/Booking';
+import BookAppointment from './pages/BookAppointment';
 import BookingConfirmed from './pages/BookingConfirmed';
 import MyBookings from './pages/MyBookings';
 import Navbar from './components/Navbar';
@@ -34,7 +34,7 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/doctors" element={<Doctors />} />
             <Route path="/doctor/:id" element={<DoctorProfile />} />
-            <Route path="/book/:id" element={<Booking />} />
+            <Route path="/book/:id" element={<BookAppointment />} />
             <Route path="/booking-confirmed" element={<BookingConfirmed />} />
             <Route path="/my-bookings" element={<MyBookings />} />
 
