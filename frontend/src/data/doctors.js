@@ -1,0 +1,19 @@
+const doctors = [
+ { id:1,  name:"Dr. Anjali Sharma",   speciality:"Cardiology",    exp:12, rating:4.9, reviews:320, location:"Mumbai",    fee:800,  available:true,  slot:"Today 3:00 PM",   hospital:"Apollo Hospital",         edu:"MBBS, MD – AIIMS Delhi" },
+ { id:2,  name:"Dr. Rohan Mehta",     speciality:"Neurology",     exp:9,  rating:4.8, reviews:210, location:"Delhi",     fee:1000, available:true,  slot:"Tomorrow 10:00 AM",hospital:"Fortis Hospital",         edu:"MBBS, DM – PGI Chandigarh" },
+ { id:3,  name:"Dr. Priya Nair",      speciality:"Pediatrics",    exp:7,  rating:4.9, reviews:415, location:"Bangalore", fee:600,  available:true,  slot:"Today 5:30 PM",   hospital:"Manipal Hospital",        edu:"MBBS, MD – KEM Mumbai" },
+ { id:4,  name:"Dr. Suresh Iyer",     speciality:"Orthopedic",    exp:15, rating:4.7, reviews:289, location:"Chennai",   fee:900,  available:false, slot:"Mon 11:00 AM",    hospital:"MIOT Hospital",           edu:"MBBS, MS – JIPMER" },
+ { id:5,  name:"Dr. Kavya Reddy",     speciality:"Dermatology",   exp:6,  rating:4.8, reviews:376, location:"Hyderabad", fee:700,  available:true,  slot:"Today 2:00 PM",   hospital:"Care Hospital",           edu:"MBBS, MD – Osmania Medical" },
+ { id:6,  name:"Dr. Arjun Patel",     speciality:"Dental",        exp:8,  rating:4.6, reviews:198, location:"Ahmedabad", fee:500,  available:true,  slot:"Today 4:00 PM",   hospital:"Smile Care Clinic",       edu:"BDS, MDS – Gujarat Univ" },
+ { id:7,  name:"Dr. Meera Joshi",     speciality:"Ophthalmology", exp:11, rating:4.9, reviews:445, location:"Pune",      fee:750,  available:true,  slot:"Tomorrow 9:00 AM",hospital:"National Eye Institute",   edu:"MBBS, MS – BJ Medical" },
+ { id:8,  name:"Dr. Vikram Singh",    speciality:"Psychiatry",    exp:10, rating:4.7, reviews:163, location:"Delhi",     fee:1200, available:true,  slot:"Today 6:00 PM",   hospital:"Max Hospital",            edu:"MBBS, MD – NIMHANS" },
+ { id:9,  name:"Dr. Sneha Kulkarni", speciality:"Cardiology",    exp:14, rating:4.8, reviews:502, location:"Pune",      fee:1100, available:false, slot:"Tue 10:30 AM",    hospital:"Ruby Hall Clinic",        edu:"MBBS, DM – AIIMS Mumbai" },
+ { id:10, name:"Dr. Rajesh Kumar",   speciality:"Neurology",     exp:18, rating:4.9, reviews:634, location:"Mumbai",    fee:1500, available:true,  slot:"Today 7:00 PM",   hospital:"Lilavati Hospital",       edu:"MBBS, DM – AIIMS Delhi" },
+ { id:11, name:"Dr. Fatima Sheikh",  speciality:"Pediatrics",    exp:5,  rating:4.7, reviews:142, location:"Lucknow",   fee:500,  available:true,  slot:"Tomorrow 11:00 AM",hospital:"Medanta Hospital",        edu:"MBBS, DCH – KGMU" },
+ { id:12, name:"Dr. Aditya Verma",   speciality:"Dermatology",   exp:9,  rating:4.6, reviews:221, location:"Jaipur",    fee:650,  available:true,  slot:"Today 1:00 PM",   hospital:"Eternal Hospital",        edu:"MBBS, MD – SMS Medical" },
+ { id:13, name:"Dr. Lakshmi Rao",    speciality:"Ophthalmology", exp:13, rating:4.8, reviews:389, location:"Bangalore", fee:850,  available:false, slot:"Wed 3:00 PM",     hospital:"Sankara Eye Hospital",    edu:"MBBS, DO – Mysore Medical" },
+ { id:14, name:"Dr. Nikhil Desai",   speciality:"Orthopedic",    exp:10, rating:4.7, reviews:267, location:"Mumbai",    fee:950,  available:true,  slot:"Today 4:30 PM",   hospital:"Hinduja Hospital",        edu:"MBBS, MS – Grant Medical" },
+ { id:15, name:"Dr. Pooja Malhotra", speciality:"Dental",        exp:4,  rating:4.5, reviews:88,  location:"Chandigarh",fee:450,  available:true,  slot:"Tomorrow 2:00 PM",hospital:"Oral Care Centre",        edu:"BDS, MDS – PGI" },
+ { id:16, name:"Dr. Sameer Bhat",    speciality:"Psychiatry",    exp:16, rating:4.9, reviews:310, location:"Srinagar",  fee:1000, available:true,  slot:"Today 5:00 PM",   hospital:"SKIMS Hospital",          edu:"MBBS, MD – GMC Srinagar" },
+];
+export default doctors;
