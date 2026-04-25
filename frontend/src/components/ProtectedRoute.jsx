@@ -1,27 +1,14 @@
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
-const ProtectedRoute = ({ children, allowedRoles }) => {
-  const { user, loading } = useAuth();
+export default function ProtectedRoute({ children }) {
+  const { isLoggedIn } = useAuth();
   const location = useLocation();
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-screen bg-slate-50">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600"></div>
-      </div>
-    );
-  }
-
-  if (!user) {
-    return <Navigate to="/login" state={{ from: location }} replace />;
-  }
-
-  if (allowedRoles && !allowedRoles.includes(user.role)) {
-    return <Navigate to="/" replace />;
+  if (!isLoggedIn) {
+    // Save the page user was trying to visit
+    return <Navigate to="/signin" state={{ from: location }} replace />;
   }
 
   return children;
-};
-
-export default ProtectedRoute;
+}

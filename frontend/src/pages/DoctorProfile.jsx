@@ -7,10 +7,12 @@ import {
   Stethoscope, Info, Phone, Mail, Award
 } from 'lucide-react';
 import doctorsData from '../data/doctors';
+import { useAuth } from '../context/AuthContext';
 
 const DoctorProfile = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { isLoggedIn } = useAuth();
   const [doctor, setDoctor] = useState(null);
   const [selectedSlot, setSelectedSlot] = useState(null);
 
@@ -42,7 +44,14 @@ const DoctorProfile = () => {
 
   const handleBooking = () => {
     if (!selectedSlot) return alert("Please select a time slot first!");
-    navigate(`/book/${doctor.id}?slot=${selectedSlot}`);
+    
+    const bookingPath = `/book/${doctor.id}?slot=${selectedSlot}`;
+    
+    if (isLoggedIn) {
+      navigate(bookingPath);
+    } else {
+      navigate('/signin', { state: { from: { pathname: bookingPath } } });
+    }
   };
 
   return (

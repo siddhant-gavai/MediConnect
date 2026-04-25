@@ -2,15 +2,26 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { Star, MapPin, Building2, Clock, IndianRupee, ArrowRight } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 const DoctorCard = ({ doctor }) => {
   const navigate = useNavigate();
+  const { isLoggedIn } = useAuth();
+
   const getInitials = (name) => {
     return name
       .split(' ')
       .map((n) => n[0])
       .join('')
       .toUpperCase();
+  };
+
+  const handleBooking = (doctorId) => {
+    if (isLoggedIn) {
+      navigate(`/book/${doctorId}`);
+    } else {
+      navigate('/signin', { state: { from: { pathname: `/book/${doctorId}` } } });
+    }
   };
 
   const renderStars = (rating) => {
@@ -104,7 +115,7 @@ const DoctorCard = ({ doctor }) => {
       {/* Footer Section: Actions */}
       <div className="p-5 pt-0 mt-auto space-y-3">
         <button
-          onClick={() => navigate(`/book/${doctor.id}`)}
+          onClick={() => handleBooking(doctor.id)}
           className="w-full bg-[#1565C0] text-white py-3.5 rounded-xl font-black text-sm flex items-center justify-center gap-2 hover:bg-blue-800 transition shadow-lg shadow-blue-100"
         >
           Book Appointment

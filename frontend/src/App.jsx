@@ -1,11 +1,13 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from './context/AuthContext';
+import { ToastProvider } from './components/Toast';
+import ProtectedRoute from './components/ProtectedRoute';
 
 // Pages
 import Home from './pages/Home';
-import Login from './pages/Login';
+import SignIn from './pages/SignIn';
 import Register from './pages/Register';
+import ForgotPassword from './pages/ForgotPassword';
 import Doctors from './pages/Doctors';
 import DoctorProfile from './pages/DoctorProfile';
 import PatientDashboard from './pages/patient/Dashboard';
@@ -22,31 +24,65 @@ import Chatbot from './components/Chatbot';
 function App() {
   return (
     <Router>
-      <AuthProvider>
-        <div className="min-h-screen bg-white">
-          <Toaster position="top-right" />
-          <Navbar />
-          <Chatbot />
-          <Routes>
-            {/* All pages will now be self-contained or use elements within Home */}
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/doctors" element={<Doctors />} />
-            <Route path="/doctor/:id" element={<DoctorProfile />} />
-            <Route path="/book/:id" element={<BookAppointment />} />
-            <Route path="/booking-confirmed" element={<BookingConfirmed />} />
-            <Route path="/my-bookings" element={<MyBookings />} />
+      <ToastProvider>
+        <AuthProvider>
+          <div className="min-h-screen bg-white">
+            <Navbar />
+            <Chatbot />
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/signin" element={<SignIn />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/doctors" element={<Doctors />} />
+              <Route path="/doctor/:id" element={<DoctorProfile />} />
+              
+              {/* Protected Routes */}
+              <Route path="/book/:id" element={
+                <ProtectedRoute>
+                  <BookAppointment />
+                </ProtectedRoute>
+              } />
+              <Route path="/booking-confirmed" element={
+                <ProtectedRoute>
+                  <BookingConfirmed />
+                </ProtectedRoute>
+              } />
+              <Route path="/my-bookings" element={
+                <ProtectedRoute>
+                  <MyBookings />
+                </ProtectedRoute>
+              } />
 
-            {/* Dashboards (with simple ProtectedRoute in logic if needed, or self-contained) */}
-            <Route path="/patient/dashboard" element={<PatientDashboard />} />
-            <Route path="/doctor/dashboard" element={<DoctorDashboard />} />
-            <Route path="/admin/dashboard" element={<AdminDashboard />} />
-            <Route path="/doctor/manage-slots" element={<ManageSlots />} />
-            <Route path="/admin/doctors" element={<ManageDoctors />} />
-          </Routes>
-        </div>
-      </AuthProvider>
+              <Route path="/patient/dashboard" element={
+                <ProtectedRoute>
+                  <PatientDashboard />
+                </ProtectedRoute>
+              } />
+              <Route path="/doctor/dashboard" element={
+                <ProtectedRoute>
+                  <DoctorDashboard />
+                </ProtectedRoute>
+              } />
+              <Route path="/admin/dashboard" element={
+                <ProtectedRoute>
+                  <AdminDashboard />
+                </ProtectedRoute>
+              } />
+              <Route path="/doctor/manage-slots" element={
+                <ProtectedRoute>
+                  <ManageSlots />
+                </ProtectedRoute>
+              } />
+              <Route path="/admin/doctors" element={
+                <ProtectedRoute>
+                  <ManageDoctors />
+                </ProtectedRoute>
+              } />
+            </Routes>
+          </div>
+        </AuthProvider>
+      </ToastProvider>
     </Router>
   );
 }
