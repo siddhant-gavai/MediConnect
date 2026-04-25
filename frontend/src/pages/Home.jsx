@@ -8,6 +8,8 @@ import {
   Eye, Baby, Sun, Activity, Star, ArrowRight, Github, 
   Twitter, Linkedin, Facebook, MapPin as MapPinIcon, Phone, Mail, User
 } from 'lucide-react';
+import doctorsData from '../data/doctors';
+import DoctorCard from '../components/DoctorCard';
 
 const Counter = ({ end, duration = 2 }) => {
   const [count, setCount] = useState(0);
@@ -314,6 +316,32 @@ const Home = () => {
                 <p className="text-[10px] font-bold text-[#475569] mt-1 uppercase tracking-tighter">{spec.count} Doctors</p>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* NEW: FEATURED DOCTORS SECTION */}
+      <section className="py-24 bg-[#F8FAFC]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
+            <div className="space-y-4">
+              <h2 className="text-3xl font-black text-[#0F172A]">Featured Doctors</h2>
+              <p className="text-[#475569] font-medium">Trusted by thousands of patients across India</p>
+            </div>
+            <Link to="/doctors" className="text-[#1565C0] font-black uppercase tracking-widest text-sm flex items-center gap-2 hover:gap-3 transition-all">
+              View All Doctors <ArrowRight className="h-5 w-5" />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {doctorsData
+              .filter(d => d.available)
+              .sort((a, b) => b.rating - a.rating)
+              .slice(0, 8)
+              .map((doc) => (
+                <DoctorCard key={doc.id} doctor={doc} />
+              ))
+            }
           </div>
         </div>
       </section>
