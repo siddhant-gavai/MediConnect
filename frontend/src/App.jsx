@@ -17,6 +17,7 @@ import Booking from './pages/Booking';
 import BookingConfirmed from './pages/BookingConfirmed';
 import MyBookings from './pages/MyBookings';
 import Navbar from './components/Navbar';
+import Chatbot from './components/Chatbot';
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
         <div className="min-h-screen bg-white">
           <Toaster position="top-right" />
           <Navbar />
+          <Chatbot />
           <Routes>
             {/* All pages will now be self-contained or use elements within Home */}
             <Route path="/" element={<Home />} />
