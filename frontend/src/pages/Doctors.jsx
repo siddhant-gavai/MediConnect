@@ -1,213 +1,369 @@
-import { useState, useEffect } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
-import api from '../api/axios';
+import React, { useState, useEffect, useMemo } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  Search, Filter, Star, Clock, User, ChevronRight, 
-  MapPin, Calendar, Stethoscope, ArrowRight 
+  Search, Filter, MapPin, Star, Clock, IndianRupee, 
+  X, ChevronDown, LayoutGrid, List, SlidersHorizontal 
 } from 'lucide-react';
-import { motion } from 'framer-motion';
-import { cn } from '../utils/cn';
-import toast from 'react-hot-toast';
+import doctorsData from '../data/doctors';
+import DoctorCard from '../components/DoctorCard';
 
-const Doctors = () => {
-  const [searchParams] = useSearchParams();
-  const [doctors, setDoctors] = useState([]);
-  const [loading, setLoading] = useState(true);
+const DoctorsPage = () => {
   const [filters, setFilters] = useState({
-    search: searchParams.get('search') || '',
-    specialization: searchParams.get('specialization') || '',
+    search: '',
+    specialities: [],
+    city: 'All Cities',
+    availableToday: false,
+    feeRange: 2000,
+    minRating: 0,
   });
 
-  useEffect(() => {
-    setFilters({
-      search: searchParams.get('search') || '',
-      specialization: searchParams.get('specialization') || '',
-    });
-  }, [searchParams]);
-
-  useEffect(() => {
-    fetchDoctors();
-  }, [filters]);
-
-  const fetchDoctors = async () => {
-    try {
-      setLoading(true);
-      const query = new URLSearchParams(filters).toString();
-      const { data } = await api.get(`/doctors?${query}`);
-      if (data.success) {
-        setDoctors(data.data);
-      }
-    } catch (error) {
-      toast.error('Failed to load doctors');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleFilterChange = (e) => {
-    setFilters({ ...filters, [e.target.name]: e.target.value });
-  };
-
-  const handleSearch = (e) => {
-    e.preventDefault();
-    fetchDoctors();
-  };
+  const [sortBy, setSortBy] = useState('Relevance');
+  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
 
   const specialities = [
-    'Cardiology', 'Dermatology', 'Pediatrics', 'Neurology', 'Orthopedic', 'General'
+    "Cardiology", "Neurology", "Pediatrics", "Orthopedic", 
+    "Dermatology", "Dental", "Ophthalmology", "Psychiatry"
   ];
 
+  const cities = ["All Cities", "Mumbai", "Delhi", "Bangalore", "Chennai", "Hyderabad", "Ahmedabad", "Pune", "Lucknow", "Jaipur", "Chandigarh", "Srinagar"];
+
+  const filteredDoctors = useMemo(() => {
+    let result = [...doctorsData];
+
+    // Search
+    if (filters.search) {
+      result = result.filter(d => 
+        d.name.toLowerCase().includes(filters.search.toLowerCase()) ||
+        d.speciality.toLowerCase().includes(filters.search.toLowerCase())
+      );
+    }
+
+    // Speciality
+    if (filters.specialities.length > 0) {
+      result = result.filter(d => filters.specialities.includes(d.speciality));
+    }
+
+    // City
+    if (filters.city !== 'All Cities') {
+      result = result.filter(d => d.location === filters.city);
+    }
+
+    // Available Today
+    if (filters.availableToday) {
+      result = result.filter(d => d.available);
+    }
+
+    // Fee Range
+    result = result.filter(d => d.fee <= filters.feeRange);
+
+    // Rating
+    if (filters.minRating > 0) {
+      result = result.filter(d => d.rating >= filters.minRating);
+    }
+
+    // Sort
+    switch (sortBy) {
+      case 'Rating':
+        result.sort((a, b) => b.rating - a.rating);
+        break;
+      case 'Fee Low–High':
+        result.sort((a, b) => a.fee - b.fee);
+        break;
+      case 'Experience':
+        result.sort((a, b) => b.exp - a.exp);
+        break;
+      default:
+        // Relevance - default order or highest rated
+        result.sort((a, b) => b.reviews - a.reviews);
+    }
+
+    return result;
+  }, [filters, sortBy]);
+
+  const toggleSpeciality = (spec) => {
+    setFilters(prev => ({
+      ...prev,
+      specialities: prev.specialities.includes(spec)
+        ? prev.specialities.filter(s => s !== spec)
+        : [...prev.specialities, spec]
+    }));
+  };
+
+  const clearFilters = () => {
+    setFilters({
+      search: '',
+      specialities: [],
+      city: 'All Cities',
+      availableToday: false,
+      feeRange: 2000,
+      minRating: 0,
+    });
+  };
+
   return (
-    <div className="space-y-12 pb-20">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-        <motion.div 
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          className="space-y-2"
-        >
-          <div className="text-primary font-bold uppercase tracking-widest text-xs flex items-center gap-2">
-            <Stethoscope className="h-4 w-4" />
-            Healthcare Experts
+    <div className="bg-[#F8FAFC] min-h-screen">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        
+        {/* Header */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
+          <div>
+            <h1 className="text-3xl font-black text-slate-900 uppercase tracking-tight">Find Specialists</h1>
+            <p className="text-slate-500 font-bold mt-1">Showing {filteredDoctors.length} doctors available for you</p>
           </div>
-          <h1 className="text-4xl font-black text-secondary tracking-tight">Find your <span className="text-primary italic">specialist</span></h1>
-          <p className="text-slate-500 font-medium">Browse through our directory of verified medical professionals.</p>
-        </motion.div>
-      </div>
-
-      <div className="grid lg:grid-cols-[1fr_3fr] gap-10 items-start">
-        {/* Sidebar Filters */}
-        <aside className="space-y-8 sticky top-24">
-          <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-8">
-            <div className="space-y-4">
-              <h3 className="font-bold text-secondary flex items-center gap-2">
-                <Filter className="h-4 w-4 text-primary" />
-                Filter by Speciality
-              </h3>
-              <div className="space-y-2">
-                <button 
-                  onClick={() => { setFilters({...filters, specialization: ''}); fetchDoctors(); }}
-                  className={cn(
-                    "w-full text-left px-4 py-2 rounded-xl text-sm font-bold transition-all",
-                    filters.specialization === '' ? "bg-primary text-white shadow-lg shadow-primary/20" : "text-slate-500 hover:bg-slate-50"
-                  )}
-                >
-                  All Specialists
-                </button>
-                {specialities.map(spec => (
-                  <button 
-                    key={spec}
-                    onClick={() => { setFilters({...filters, specialization: spec}); fetchDoctors(); }}
-                    className={cn(
-                      "w-full text-left px-4 py-2 rounded-xl text-sm font-bold transition-all",
-                      filters.specialization === spec ? "bg-primary text-white shadow-lg shadow-primary/20" : "text-slate-500 hover:bg-slate-50"
-                    )}
-                  >
-                    {spec}
-                  </button>
-                ))}
-              </div>
+          
+          <div className="flex items-center gap-4">
+            <div className="relative hidden md:block">
+              <select 
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                className="appearance-none bg-white border border-slate-200 pl-4 pr-10 py-2.5 rounded-xl text-sm font-black text-slate-700 outline-none focus:ring-2 focus:ring-blue-100 cursor-pointer shadow-sm"
+              >
+                <option>Relevance</option>
+                <option>Rating</option>
+                <option>Fee Low–High</option>
+                <option>Experience</option>
+              </select>
+              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
             </div>
+            
+            <button 
+              onClick={() => setIsMobileFilterOpen(true)}
+              className="lg:hidden flex items-center gap-2 bg-[#1565C0] text-white px-6 py-2.5 rounded-xl font-black text-sm shadow-lg shadow-blue-100"
+            >
+              <SlidersHorizontal size={18} /> Filters
+            </button>
+          </div>
+        </div>
 
-            <div className="pt-8 border-t border-slate-100 space-y-4">
-              <h3 className="font-bold text-secondary">Search Details</h3>
-              <div className="space-y-4">
+        <div className="grid lg:grid-cols-[280px_1fr] gap-10">
+          
+          {/* Sidebar - Desktop */}
+          <aside className="hidden lg:block space-y-8 sticky top-24 h-fit">
+            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-8">
+              
+              {/* Search */}
+              <div className="space-y-3">
+                <label className="text-xs font-black text-slate-400 uppercase tracking-widest">Search by Name</label>
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
                   <input 
-                    name="search"
                     type="text" 
-                    placeholder="Doctor name..." 
+                    placeholder="Dr. Sharma..."
+                    className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border-none rounded-xl text-sm font-bold outline-none focus:ring-2 focus:ring-blue-100 transition-all"
                     value={filters.search}
-                    onChange={handleFilterChange}
-                    className="w-full pl-10 pr-4 py-2 rounded-xl bg-slate-50 border-none text-sm outline-none focus:ring-2 focus:ring-primary/20"
+                    onChange={(e) => setFilters({...filters, search: e.target.value})}
                   />
                 </div>
+              </div>
+
+              {/* Speciality */}
+              <div className="space-y-4">
+                <label className="text-xs font-black text-slate-400 uppercase tracking-widest">Speciality</label>
+                <div className="space-y-2.5 max-h-[200px] overflow-y-auto pr-2 custom-scrollbar">
+                  {specialities.map(spec => (
+                    <label key={spec} className="flex items-center gap-3 cursor-pointer group">
+                      <div className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${filters.specialities.includes(spec) ? 'bg-[#1565C0] border-[#1565C0]' : 'border-slate-200 group-hover:border-[#1565C0]'}`}>
+                        {filters.specialities.includes(spec) && <X size={14} className="text-white rotate-45" />}
+                        <input 
+                          type="checkbox" 
+                          className="hidden" 
+                          checked={filters.specialities.includes(spec)}
+                          onChange={() => toggleSpeciality(spec)}
+                        />
+                      </div>
+                      <span className={`text-sm font-bold ${filters.specialities.includes(spec) ? 'text-slate-900' : 'text-slate-500'}`}>{spec}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              {/* City */}
+              <div className="space-y-3">
+                <label className="text-xs font-black text-slate-400 uppercase tracking-widest">Location</label>
+                <div className="relative">
+                  <select 
+                    className="w-full appearance-none bg-slate-50 border-none pl-4 pr-10 py-2.5 rounded-xl text-sm font-bold text-slate-700 outline-none focus:ring-2 focus:ring-blue-100 cursor-pointer"
+                    value={filters.city}
+                    onChange={(e) => setFilters({...filters, city: e.target.value})}
+                  >
+                    {cities.map(city => <option key={city}>{city}</option>)}
+                  </select>
+                  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
+                </div>
+              </div>
+
+              {/* Availability Toggle */}
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-black text-slate-400 uppercase tracking-widest">Available Today</label>
                 <button 
-                  onClick={handleSearch}
-                  className="w-full py-3 bg-secondary text-white font-bold rounded-xl hover:bg-slate-800 transition-all shadow-lg"
+                  onClick={() => setFilters({...filters, availableToday: !filters.availableToday})}
+                  className={`w-11 h-6 rounded-full transition-all relative ${filters.availableToday ? 'bg-[#1565C0]' : 'bg-slate-200'}`}
+                >
+                  <div className={`absolute top-1 h-4 w-4 bg-white rounded-full transition-all ${filters.availableToday ? 'left-6' : 'left-1'}`} />
+                </button>
+              </div>
+
+              {/* Fee Range */}
+              <div className="space-y-4">
+                <div className="flex justify-between items-center">
+                  <label className="text-xs font-black text-slate-400 uppercase tracking-widest">Max Fee</label>
+                  <span className="text-sm font-black text-[#1565C0]">₹{filters.feeRange}</span>
+                </div>
+                <input 
+                  type="range" 
+                  min="400" 
+                  max="2000" 
+                  step="100"
+                  className="w-full accent-[#1565C0]"
+                  value={filters.feeRange}
+                  onChange={(e) => setFilters({...filters, feeRange: parseInt(e.target.value)})}
+                />
+              </div>
+
+              {/* Rating */}
+              <div className="space-y-4">
+                <label className="text-xs font-black text-slate-400 uppercase tracking-widest">Rating</label>
+                <div className="space-y-2">
+                  {[4.8, 4.5, 4.0].map(rating => (
+                    <label key={rating} className="flex items-center gap-3 cursor-pointer group">
+                      <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${filters.minRating === rating ? 'border-[#1565C0]' : 'border-slate-200 group-hover:border-[#1565C0]'}`}>
+                        <div className={`w-2.5 h-2.5 rounded-full transition-all ${filters.minRating === rating ? 'bg-[#1565C0]' : 'bg-transparent'}`} />
+                        <input 
+                          type="radio" 
+                          className="hidden" 
+                          name="rating"
+                          checked={filters.minRating === rating}
+                          onChange={() => setFilters({...filters, minRating: rating})}
+                        />
+                      </div>
+                      <span className="text-sm font-bold text-slate-600">{rating}+ Rating</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              <button 
+                onClick={clearFilters}
+                className="w-full text-center text-xs font-black text-red-500 uppercase tracking-widest hover:text-red-600 transition"
+              >
+                Clear All Filters
+              </button>
+            </div>
+          </aside>
+
+          {/* Doctors Grid */}
+          <main>
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+              <AnimatePresence>
+                {filteredDoctors.map((doc) => (
+                  <motion.div
+                    key={doc.id}
+                    layout
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <DoctorCard doctor={doc} />
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </div>
+
+            {filteredDoctors.length === 0 && (
+              <div className="text-center py-24 bg-white rounded-3xl border border-slate-200 border-dashed">
+                <div className="bg-slate-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Search className="text-slate-300" size={32} />
+                </div>
+                <h3 className="text-xl font-black text-slate-900 uppercase tracking-tight">No Doctors Found</h3>
+                <p className="text-slate-500 font-bold max-w-xs mx-auto mt-1">Try adjusting your filters to find what you're looking for.</p>
+                <button 
+                  onClick={clearFilters}
+                  className="mt-6 bg-[#1565C0] text-white px-8 py-3 rounded-xl font-black text-sm"
+                >
+                  Clear Filters
+                </button>
+              </div>
+            )}
+          </main>
+        </div>
+      </div>
+
+      {/* Mobile Filter Overlay */}
+      <AnimatePresence>
+        {isMobileFilterOpen && (
+          <>
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsMobileFilterOpen(false)}
+              className="fixed inset-0 bg-black/50 z-[60] backdrop-blur-sm"
+            />
+            <motion.div 
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              className="fixed inset-y-0 right-0 w-[85%] max-w-sm bg-white z-[70] shadow-2xl p-6 flex flex-col"
+            >
+              <div className="flex items-center justify-between mb-8 pb-4 border-b">
+                <h3 className="text-xl font-black text-slate-900 uppercase tracking-tight">Filters</h3>
+                <button onClick={() => setIsMobileFilterOpen(false)} className="p-2 hover:bg-slate-100 rounded-lg">
+                  <X size={24} />
+                </button>
+              </div>
+              
+              <div className="flex-1 overflow-y-auto space-y-8 pr-2 custom-scrollbar">
+                {/* Same filter content as desktop sidebar */}
+                <div className="space-y-3">
+                  <label className="text-xs font-black text-slate-400 uppercase tracking-widest">Search</label>
+                  <input 
+                    type="text" 
+                    placeholder="Dr. Sharma..."
+                    className="w-full px-4 py-3 bg-slate-50 border-none rounded-xl text-sm font-bold outline-none"
+                    value={filters.search}
+                    onChange={(e) => setFilters({...filters, search: e.target.value})}
+                  />
+                </div>
+
+                <div className="space-y-4">
+                  <label className="text-xs font-black text-slate-400 uppercase tracking-widest">Speciality</label>
+                  <div className="flex flex-wrap gap-2">
+                    {specialities.map(spec => (
+                      <button 
+                        key={spec}
+                        onClick={() => toggleSpeciality(spec)}
+                        className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all border ${filters.specialities.includes(spec) ? 'bg-[#1565C0] text-white border-[#1565C0]' : 'bg-white text-slate-500 border-slate-200'}`}
+                      >
+                        {spec}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Add more filters here as needed for mobile */}
+              </div>
+
+              <div className="pt-6 mt-6 border-t space-y-4">
+                <button 
+                  onClick={() => setIsMobileFilterOpen(false)}
+                  className="w-full bg-[#1565C0] text-white py-4 rounded-2xl font-black uppercase tracking-widest shadow-lg"
                 >
                   Apply Filters
                 </button>
-              </div>
-            </div>
-          </div>
-        </aside>
-
-        {/* Results */}
-        <div className="space-y-8">
-          {loading ? (
-            <div className="grid md:grid-cols-2 gap-8">
-              {[1, 2, 4].map(n => <div key={n} className="h-64 bg-slate-100 rounded-3xl animate-pulse" />)}
-            </div>
-          ) : doctors.length > 0 ? (
-            <div className="grid md:grid-cols-2 gap-8">
-              {doctors.map((doc, i) => (
-                <motion.div 
-                  key={doc.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.1 }}
-                  className="group bg-white rounded-[32px] border border-slate-100 p-6 hover:shadow-2xl hover:shadow-primary/10 transition-all duration-300 relative overflow-hidden"
+                <button 
+                  onClick={clearFilters}
+                  className="w-full text-center text-xs font-black text-slate-400 uppercase tracking-widest"
                 >
-                  <div className="flex gap-6 relative z-10">
-                    <div className="h-24 w-24 rounded-2xl bg-slate-50 overflow-hidden border border-slate-100 flex-shrink-0">
-                      {doc.avatar ? (
-                        <img src={doc.avatar} alt={doc.name} className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-500" />
-                      ) : (
-                        <div className="h-full w-full flex items-center justify-center text-2xl font-black text-primary/20">{doc.name[0]}</div>
-                      )}
-                    </div>
-                    <div className="space-y-1 flex-1">
-                      <div className="flex justify-between items-start">
-                        <h3 className="text-xl font-black text-secondary tracking-tight group-hover:text-primary transition-colors uppercase">{doc.name}</h3>
-                        <div className="flex items-center gap-1 bg-amber-50 px-2 py-1 rounded-lg">
-                          <Star className="h-3 w-3 text-amber-500 fill-current" />
-                          <span className="text-[10px] font-black text-amber-700">{doc.doctorProfile?.rating.toFixed(1)}</span>
-                        </div>
-                      </div>
-                      <p className="text-xs font-bold text-accent uppercase tracking-widest">{doc.doctorProfile?.specialization}</p>
-                      
-                      <div className="flex gap-4 pt-3 flex-wrap">
-                        <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-400">
-                          <Clock className="h-3.5 w-3.5" />
-                          {doc.doctorProfile?.experience} YRS EXP
-                        </div>
-                        <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-400">
-                          <MapPin className="h-3.5 w-3.5" />
-                          NEARBY
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="mt-8 pt-6 border-t border-slate-50 flex items-center justify-between">
-                    <div>
-                      <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest leading-none mb-1">Consultation Fee</p>
-                      <p className="text-lg font-black text-secondary">${doc.doctorProfile?.fees}</p>
-                    </div>
-                    <Link to={`/book/${doc.id}`} className="px-6 py-3 bg-primary/5 text-primary font-bold rounded-xl group-hover:bg-primary group-hover:text-white transition-all text-sm flex items-center gap-2">
-                      Book Now
-                      <ArrowRight className="h-4 w-4" />
-                    </Link>
-                  </div>
-                  
-                  {/* Decorative background circle */}
-                  <div className="absolute top-0 right-0 h-24 w-24 bg-primary/5 rounded-full -mr-12 -mt-12 group-hover:scale-150 transition-transform duration-700" />
-                </motion.div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-32 bg-white rounded-[40px] border border-dashed border-slate-200">
-              <Search className="h-12 w-12 text-slate-100 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-secondary">No specialists found</h3>
-              <p className="text-slate-400 text-sm">Try adjusting your filters or search keywords.</p>
-            </div>
-          )}
-        </div>
-      </div>
+                  Reset All
+                </button>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
 
-export default Doctors;
+export default DoctorsPage;
