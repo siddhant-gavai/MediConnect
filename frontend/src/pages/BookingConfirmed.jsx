@@ -1,10 +1,12 @@
 import React, { useEffect } from 'react';
 import { useLocation, Link, Navigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Check, Calendar, Clock, IndianRupee, MapPin, Building2, LayoutGrid, Search } from 'lucide-react';
+import { Check, Calendar, Clock, IndianRupee, MapPin, Building2, LayoutGrid, Search, Copy } from 'lucide-react';
+import { useToast } from '../components/Toast';
 
 const BookingConfirmed = () => {
   const location = useLocation();
+  const { showToast } = useToast();
   const booking = location.state?.booking;
 
   if (!booking) return <Navigate to="/doctors" />;
@@ -43,10 +45,20 @@ const BookingConfirmed = () => {
           <h1 className="text-3xl font-black text-green-700 uppercase tracking-tight">Appointment Confirmed!</h1>
           <p className="text-slate-500 font-bold">You will receive a confirmation on your email shortly.</p>
           
-          <div className="inline-block bg-blue-50 px-6 py-2 rounded-full border border-blue-100 mt-4">
+          <div className="inline-flex items-center gap-3 bg-blue-50 px-6 py-2 rounded-full border border-blue-100 mt-4 group">
             <p className="text-sm font-black text-[#1565C0] uppercase tracking-[0.2em]">
               Booking ID: <span className="text-blue-700">{booking.id}</span>
             </p>
+            <button 
+              onClick={() => {
+                navigator.clipboard.writeText(booking.id);
+                showToast('Booking ID copied to clipboard!', 'success');
+              }}
+              className="p-1.5 hover:bg-blue-100 rounded-lg text-[#1565C0] transition-colors"
+              title="Copy ID"
+            >
+              <Copy size={14} />
+            </button>
           </div>
         </div>
 
