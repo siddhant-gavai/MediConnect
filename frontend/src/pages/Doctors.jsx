@@ -15,6 +15,7 @@ const DoctorsPage = () => {
     availableToday: false,
     feeRange: 2000,
     minRating: 0,
+    hospital: '',
   });
 
   const [sortBy, setSortBy] = useState('Relevance');
@@ -38,7 +39,12 @@ const DoctorsPage = () => {
       );
     }
 
-    // Speciality
+    // Hospital Search
+    if (filters.hospital) {
+      result = result.filter(d => 
+        d.hospital.toLowerCase().includes(filters.hospital.toLowerCase())
+      );
+    }
     if (filters.specialities.length > 0) {
       result = result.filter(d => filters.specialities.includes(d.speciality));
     }
@@ -69,6 +75,12 @@ const DoctorsPage = () => {
       case 'Fee Low–High':
         result.sort((a, b) => a.fee - b.fee);
         break;
+      case 'Fee High–Low':
+        result.sort((a, b) => b.fee - a.fee);
+        break;
+      case 'Most Reviews':
+        result.sort((a, b) => b.reviews - a.reviews);
+        break;
       case 'Experience':
         result.sort((a, b) => b.exp - a.exp);
         break;
@@ -97,6 +109,7 @@ const DoctorsPage = () => {
       availableToday: false,
       feeRange: 2000,
       minRating: 0,
+      hospital: '',
     });
   };
 
@@ -121,6 +134,8 @@ const DoctorsPage = () => {
                 <option>Relevance</option>
                 <option>Rating</option>
                 <option>Fee Low–High</option>
+                <option>Fee High–Low</option>
+                <option>Most Reviews</option>
                 <option>Experience</option>
               </select>
               <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
@@ -156,7 +171,20 @@ const DoctorsPage = () => {
                 </div>
               </div>
 
-              {/* Speciality */}
+              {/* Search by Hospital */}
+              <div className="space-y-3">
+                <label className="text-xs font-black text-slate-400 uppercase tracking-widest">Search by Hospital</label>
+                <div className="relative">
+                  <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                  <input 
+                    type="text" 
+                    placeholder="Apollo, Fortis..."
+                    className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border-none rounded-xl text-sm font-bold outline-none focus:ring-2 focus:ring-blue-100 transition-all"
+                    value={filters.hospital}
+                    onChange={(e) => setFilters({...filters, hospital: e.target.value})}
+                  />
+                </div>
+              </div>
               <div className="space-y-4">
                 <label className="text-xs font-black text-slate-400 uppercase tracking-widest">Speciality</label>
                 <div className="space-y-2.5 max-h-[200px] overflow-y-auto pr-2 custom-scrollbar">
