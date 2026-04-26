@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Search, Filter, MapPin, Star, Clock, IndianRupee, 
-  X, ChevronDown, LayoutGrid, List, SlidersHorizontal 
+  X, ChevronDown, LayoutGrid, List, SlidersHorizontal, Building2 
 } from 'lucide-react';
 import doctorsData from '../data/doctors';
 import DoctorCard from '../components/DoctorCard';

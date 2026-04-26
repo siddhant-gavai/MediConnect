@@ -1,12 +1,35 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
-import { Star, MapPin, Building2, Clock, IndianRupee, ArrowRight } from 'lucide-react';
+import { Star, MapPin, Building2, Clock, IndianRupee, ArrowRight, Heart } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../components/Toast';
 
-const DoctorCard = ({ doctor }) => {
+const DoctorCard = ({ doctor, buttonText = "Book Appointment" }) => {
   const navigate = useNavigate();
   const { isLoggedIn } = useAuth();
+  const { showToast } = useToast();
+  
+  const [isSaved, setIsSaved] = React.useState(() => {
+    const saved = JSON.parse(localStorage.getItem('saved_doctors') || '[]');
+    return saved.includes(doctor.id);
+  });
+
+  const toggleSave = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const saved = JSON.parse(localStorage.getItem('saved_doctors') || '[]');
+    let updated;
+    if (isSaved) {
+      updated = saved.filter(id => id !== doctor.id);
+      showToast('Removed from saved doctors', 'info');
+    } else {
+      updated = [...saved, doctor.id];
+      showToast('Saved to your favorites!', 'success');
+    }
+    localStorage.setItem('saved_doctors', JSON.stringify(updated));
+    setIsSaved(!isSaved);
+  };
 
   const getInitials = (name) => {
     return name
@@ -50,8 +73,18 @@ const DoctorCard = ({ doctor }) => {
       <div className="p-5 flex-1 flex flex-col space-y-4">
         {/* Top Section: Avatar & Badges */}
         <div className="flex justify-between items-start">
-          <div className="h-16 w-16 rounded-full bg-[#1565C0] flex items-center justify-center text-white font-black text-xl shadow-inner shrink-0">
-            {getInitials(doctor.name)}
+          <div className="relative">
+            <div className="h-16 w-16 rounded-full bg-[#1565C0] flex items-center justify-center text-white font-black text-xl shadow-inner shrink-0">
+              {getInitials(doctor.name)}
+            </div>
+            <button 
+              onClick={toggleSave}
+              className={`absolute -bottom-1 -right-1 p-1.5 rounded-full border-2 transition-all shadow-sm ${
+                isSaved ? 'bg-red-50 border-red-100 text-red-500' : 'bg-white border-slate-100 text-slate-300 hover:text-red-400'
+              }`}
+            >
+              <Heart size={14} className={isSaved ? 'fill-current' : ''} />
+            </button>
           </div>
           <div className="flex flex-col items-end gap-2">
             {doctor.available ? (
@@ -118,7 +151,7 @@ const DoctorCard = ({ doctor }) => {
           onClick={() => handleBooking(doctor.id)}
           className="w-full bg-[#1565C0] text-white py-3.5 rounded-xl font-black text-sm flex items-center justify-center gap-2 hover:bg-blue-800 transition shadow-lg shadow-blue-100"
         >
-          Book Appointment
+          {buttonText}
           <ArrowRight size={16} />
         </button>
         <Link

@@ -56,6 +56,11 @@ function App() {
                 </ProtectedRoute>
               } />
 
+              <Route path="/dashboard" element={
+                <ProtectedRoute>
+                  <PatientDashboard />
+                </ProtectedRoute>
+              } />
               <Route path="/patient/dashboard" element={
                 <ProtectedRoute>
                   <PatientDashboard />
