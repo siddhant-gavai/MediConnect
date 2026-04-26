@@ -20,6 +20,7 @@ import BookingConfirmed from './pages/BookingConfirmed';
 import MyBookings from './pages/MyBookings';
 import Navbar from './components/Navbar';
 import Chatbot from './components/Chatbot';
+import BackToTop from './components/BackToTop';
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
           <div className="min-h-screen bg-white">
             <Navbar />
             <Chatbot />
+            <BackToTop />
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/signin" element={<SignIn />} />
