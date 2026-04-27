@@ -4,17 +4,24 @@ import { motion } from 'framer-motion';
 import { 
   Star, MapPin, Building2, Clock, IndianRupee, 
   ArrowLeft, CheckCircle, Calendar, GraduationCap, 
-  Stethoscope, Info, Phone, Mail, Award
+  Stethoscope, Info, Phone, Mail, Award, Share2 
 } from 'lucide-react';
 import doctorsData from '../data/doctors';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../components/Toast';
 
 const DoctorProfile = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { isLoggedIn } = useAuth();
+  const { showToast } = useToast();
   const [doctor, setDoctor] = useState(null);
   const [selectedSlot, setSelectedSlot] = useState(null);
+
+  const handleShare = () => {
+    navigator.clipboard.writeText(window.location.href);
+    showToast("Profile link copied to clipboard!", "success");
+  };
 
   const timeSlots = [
     "9:00 AM", "10:00 AM", "11:00 AM", 
@@ -59,10 +66,19 @@ const DoctorProfile = () => {
       {/* Header / Hero Area */}
       <div className="bg-white border-b border-slate-200 pt-8 pb-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <Link to="/doctors" className="inline-flex items-center gap-2 text-slate-500 font-bold hover:text-[#1565C0] transition mb-8 group">
-            <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
-            Back to Doctors
-          </Link>
+          <div className="flex items-center justify-between mb-8">
+            <Link to="/doctors" className="inline-flex items-center gap-2 text-slate-500 font-bold hover:text-[#1565C0] transition group">
+              <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
+              Back to Doctors
+            </Link>
+            <button 
+              onClick={handleShare}
+              className="flex items-center gap-2 px-4 py-2 bg-slate-50 text-slate-600 font-bold rounded-xl hover:bg-slate-100 transition border border-slate-100 active:scale-95 shadow-sm"
+            >
+              <Share2 size={16} />
+              <span className="text-xs uppercase tracking-widest">Share Profile</span>
+            </button>
+          </div>
 
           <div className="flex flex-col md:flex-row gap-10 items-start">
             {/* Avatar Section */}

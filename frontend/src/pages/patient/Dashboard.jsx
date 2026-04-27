@@ -586,6 +586,52 @@ const SettingsTab = ({ profileData, setProfileData }) => {
           </button>
         </div>
       </form>
+
+      {/* Change Password Section */}
+      <div className="mt-12 bg-white rounded-[32px] border border-slate-100 shadow-sm p-10 space-y-8">
+        <div className="flex items-center gap-4">
+          <div className="p-3 bg-amber-50 rounded-2xl text-amber-500">
+            <AlertCircle size={24} />
+          </div>
+          <div>
+            <h3 className="text-xl font-black text-slate-900 uppercase tracking-tight">Security</h3>
+            <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">Manage your account password</p>
+          </div>
+        </div>
+
+        <div className="grid sm:grid-cols-3 gap-6 pt-6 border-t border-slate-50">
+          <div className="space-y-2">
+            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Current Password</label>
+            <input 
+              type="password" 
+              placeholder="••••••••"
+              className="w-full px-6 py-4 bg-slate-50 rounded-2xl border-none focus:ring-2 focus:ring-[#1565C0] outline-none font-bold text-sm"
+            />
+          </div>
+          <div className="space-y-2">
+            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">New Password</label>
+            <input 
+              type="password" 
+              placeholder="••••••••"
+              className="w-full px-6 py-4 bg-slate-50 rounded-2xl border-none focus:ring-2 focus:ring-[#1565C0] outline-none font-bold text-sm"
+            />
+          </div>
+          <div className="space-y-2">
+            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Confirm Password</label>
+            <input 
+              type="password" 
+              placeholder="••••••••"
+              className="w-full px-6 py-4 bg-slate-50 rounded-2xl border-none focus:ring-2 focus:ring-[#1565C0] outline-none font-bold text-sm"
+            />
+          </div>
+        </div>
+
+        <div className="flex justify-end">
+          <button className="bg-slate-900 text-white px-10 py-4 rounded-2xl font-black uppercase tracking-[0.2em] hover:bg-black transition shadow-xl shadow-slate-100 text-xs">
+            Update Password
+          </button>
+        </div>
+      </div>
     </motion.div>
   );
 };

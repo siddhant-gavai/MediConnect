@@ -47,5 +47,17 @@ const symptomMap = [
     message: "Mental health is important. Speaking with a Psychiatrist can really help.",
     urgent: false
   },
+  {
+    keywords: ["stomach","digestion","acid","acidity","bloating","diarrhea","constipation","gastric","vomiting","nausea","liver","appetite"],
+    speciality: "Gastroenterology",
+    message: "Digestive issues are best addressed by a Gastroenterologist.",
+    urgent: false
+  },
+  {
+    keywords: ["ear","nose","throat","earache","cold","sinus","sneezing","cough","voice","tonsils","hearing","tinnitus"],
+    speciality: "ENT",
+    message: "For ear, nose, or throat concerns, an ENT specialist is recommended.",
+    urgent: false
+  },
 ];
 export default symptomMap;

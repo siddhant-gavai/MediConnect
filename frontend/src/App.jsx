@@ -21,6 +21,7 @@ import MyBookings from './pages/MyBookings';
 import Navbar from './components/Navbar';
 import Chatbot from './components/Chatbot';
 import BackToTop from './components/BackToTop';
+import Footer from './components/Footer';
 
 function App() {
   return (
@@ -87,6 +88,7 @@ function App() {
                 </ProtectedRoute>
               } />
             </Routes>
+            <Footer />
           </div>
         </AuthProvider>
       </ToastProvider>

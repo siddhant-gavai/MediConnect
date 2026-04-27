@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
-import { Star, MapPin, Building2, Clock, IndianRupee, ArrowRight, Heart } from 'lucide-react';
+import { Star, MapPin, Building2, Clock, IndianRupee, ArrowRight, Heart, CheckCircle2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../components/Toast';
 
@@ -106,9 +106,12 @@ const DoctorCard = ({ doctor, buttonText = "Book Appointment" }) => {
         {/* Content Section */}
         <div className="space-y-3">
           <div>
-            <h3 className="text-lg font-black text-slate-900 leading-tight">
-              {doctor.name}
-            </h3>
+            <div className="flex items-center gap-2">
+              <h3 className="text-lg font-black text-slate-900 leading-tight">
+                {doctor.name}
+              </h3>
+              <CheckCircle2 size={16} className="text-blue-500 fill-blue-50" />
+            </div>
             <div className="flex items-center gap-2 mt-1">
               {renderStars(doctor.rating)}
               <span className="text-xs font-bold text-slate-400">
@@ -128,16 +131,16 @@ const DoctorCard = ({ doctor, buttonText = "Book Appointment" }) => {
             </div>
           </div>
 
-          <div className="flex flex-wrap gap-2 pt-1">
-            <div className="px-3 py-1.5 bg-slate-50 rounded-lg flex items-center gap-1.5 border border-slate-100">
-              <Clock size={14} className="text-slate-400" />
-              <span className="text-[11px] font-black text-slate-600 uppercase tracking-tight">
+          <div className="flex flex-wrap gap-2 pt-2">
+            <div className="px-3 py-2 bg-[#F0F9FF] rounded-xl flex items-center gap-2 border border-blue-100 group">
+              <Clock size={14} className="text-[#0288D1]" />
+              <span className="text-[10px] font-black text-[#0288D1] uppercase tracking-wider">
                 {doctor.exp} Years Exp
               </span>
             </div>
-            <div className="px-3 py-1.5 bg-slate-50 rounded-lg flex items-center gap-1.5 border border-slate-100">
-              <IndianRupee size={14} className="text-slate-400" />
-              <span className="text-[11px] font-black text-slate-600 uppercase tracking-tight">
+            <div className="px-3 py-2 bg-[#FDF2F8] rounded-xl flex items-center gap-2 border border-pink-100">
+              <IndianRupee size={14} className="text-pink-600" />
+              <span className="text-[10px] font-black text-pink-600 uppercase tracking-wider">
                 ₹{doctor.fee}
               </span>
             </div>
