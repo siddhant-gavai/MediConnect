@@ -3,15 +3,20 @@ import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Calendar, Clock, MapPin, Building2, ChevronRight, 
-  Trash2, RefreshCw, AlertCircle, Search, Info
+  Trash2, RefreshCw, AlertCircle, Search, Star
 } from 'lucide-react';
-import toast from 'react-hot-toast';
+import { useToast } from '../components/Toast';
 
 const MyBookings = () => {
   const [bookings, setBookings] = useState([]);
   const [activeTab, setActiveTab] = useState('All');
   const [showCancelConfirm, setShowCancelConfirm] = useState(null);
+  const { showToast } = useToast();
   const navigate = useNavigate();
+
+  const [ratings, setRatings] = useState(() => {
+    return JSON.parse(localStorage.getItem('mediconnect_ratings') || '{}');
+  });
 
   useEffect(() => {
     const savedBookings = JSON.parse(localStorage.getItem('mediconnect_bookings') || '[]');
@@ -29,7 +34,14 @@ const MyBookings = () => {
   const handleCancel = (id) => {
     updateBookingStatus(id, 'cancelled');
     setShowCancelConfirm(null);
-    toast.success('Appointment cancelled successfully');
+    showToast('Appointment cancelled successfully', 'success');
+  };
+
+  const handleRate = (bookingId, rating) => {
+    const updated = { ...ratings, [bookingId]: rating };
+    setRatings(updated);
+    localStorage.setItem('mediconnect_ratings', JSON.stringify(updated));
+    showToast('Thank you for your feedback!', 'success');
   };
 
   const filteredBookings = bookings.filter(b => {
@@ -47,21 +59,21 @@ const MyBookings = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] py-16 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#F8FAFC] py-32 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
           <div>
-            <h1 className="text-3xl font-black text-slate-900 uppercase tracking-tight">My Appointments</h1>
+            <h1 className="text-4xl font-black text-slate-900 uppercase tracking-tight">My Appointments</h1>
             <p className="text-slate-500 font-bold mt-1">Manage and track your medical consultations</p>
           </div>
           
-          <div className="bg-white p-1.5 rounded-2xl border border-slate-200 flex gap-1 shadow-sm">
+          <div className="bg-white p-2 rounded-[24px] border border-slate-100 flex gap-1 shadow-xl shadow-slate-100">
             {['All', 'Upcoming', 'Completed', 'Cancelled'].map(tab => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${
-                  activeTab === tab ? 'bg-[#1565C0] text-white shadow-lg shadow-blue-100' : 'text-slate-500 hover:bg-slate-50'
+                className={`px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all ${
+                  activeTab === tab ? 'bg-[#1565C0] text-white shadow-lg shadow-blue-200' : 'text-slate-400 hover:text-slate-600'
                 }`}
               >
                 {tab}
@@ -70,93 +82,124 @@ const MyBookings = () => {
           </div>
         </div>
 
-        <div className="space-y-6">
+        <div className="space-y-8">
           <AnimatePresence mode="popLayout">
             {filteredBookings.length > 0 ? (
               filteredBookings.map((booking) => (
                 <motion.div
                   key={booking.id}
                   layout
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.95 }}
-                  className="bg-white rounded-[32px] border border-slate-200 shadow-sm hover:shadow-xl hover:shadow-slate-200/50 transition-all duration-300 p-8"
+                  className="bg-white rounded-[48px] border border-slate-100 shadow-sm hover:shadow-2xl hover:shadow-blue-500/5 transition-all duration-500 p-10 group"
                 >
-                  <div className="flex flex-col sm:flex-row gap-8">
+                  <div className="flex flex-col lg:flex-row gap-10">
                     {/* Doctor Info */}
-                    <div className="flex gap-4 min-w-[240px]">
-                      <div className="h-16 w-16 rounded-2xl bg-[#1565C0] flex items-center justify-center text-white text-xl font-black shadow-inner shrink-0">
+                    <div className="flex gap-6 min-w-[280px]">
+                      <div className="h-20 w-20 rounded-[28px] bg-gradient-to-br from-[#1565C0] to-[#0288D1] flex items-center justify-center text-white text-2xl font-black shadow-xl group-hover:scale-110 transition-transform duration-500">
                         {booking.doctorName.split(' ').map(n => n[0]).join('')}
                       </div>
-                      <div className="space-y-1">
-                        <div className={`inline-block px-2 py-0.5 rounded-md text-[8px] font-black uppercase tracking-[0.2em] border ${getStatusStyle(booking.status)}`}>
+                      <div className="space-y-2">
+                        <div className={`inline-block px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-[0.2em] border ${getStatusStyle(booking.status)}`}>
                           {booking.status}
                         </div>
-                        <h3 className="text-lg font-black text-slate-900 uppercase tracking-tight">{booking.doctorName}</h3>
-                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{booking.speciality} • {booking.hospital}</p>
+                        <h3 className="text-xl font-black text-slate-900 tracking-tight group-hover:text-[#1565C0] transition-colors">{booking.doctorName}</h3>
+                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-relaxed">{booking.speciality}<br/>{booking.hospital}</p>
                       </div>
                     </div>
 
                     {/* DateTime Info */}
-                    <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-4 py-4 sm:py-0 border-y sm:border-y-0 sm:border-x border-slate-100 sm:px-8">
-                      <div className="flex items-center gap-3">
-                        <div className="p-2 bg-slate-50 rounded-lg text-slate-400">
-                          <Calendar size={18} />
-                        </div>
-                        <div>
-                          <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Date</p>
-                          <p className="text-sm font-black text-slate-700">{new Date(booking.date).toLocaleDateString('en-US', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })}</p>
+                    <div className="flex-1 grid grid-cols-2 gap-6 lg:border-x lg:border-slate-100 lg:px-10">
+                      <div className="space-y-1">
+                        <p className="text-[9px] font-black text-slate-300 uppercase tracking-widest">Date</p>
+                        <div className="flex items-center gap-2 text-slate-700">
+                          <Calendar size={16} className="text-[#1565C0]" />
+                          <span className="text-sm font-black">{new Date(booking.date).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
                         </div>
                       </div>
-                      <div className="flex items-center gap-3">
-                        <div className="p-2 bg-slate-50 rounded-lg text-slate-400">
-                          <Clock size={18} />
-                        </div>
-                        <div>
-                          <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Time Slot</p>
-                          <p className="text-sm font-black text-slate-700">{booking.time}</p>
+                      <div className="space-y-1">
+                        <p className="text-[9px] font-black text-slate-300 uppercase tracking-widest">Time Slot</p>
+                        <div className="flex items-center gap-2 text-slate-700">
+                          <Clock size={16} className="text-[#1565C0]" />
+                          <span className="text-sm font-black">{booking.time}</span>
                         </div>
                       </div>
                     </div>
 
-                    {/* Status & ID */}
-                    <div className="flex flex-col justify-center sm:items-end min-w-[120px]">
-                      <p className="text-2xl font-black text-[#1565C0]">₹{booking.fee}</p>
+                    {/* Fee */}
+                    <div className="flex flex-col justify-center lg:items-end">
+                      <p className="text-3xl font-black text-slate-900">₹{booking.fee}</p>
                       <p className="text-[10px] font-bold text-slate-300 uppercase tracking-widest mt-1">ID: {booking.id}</p>
                     </div>
                   </div>
 
-                  {booking.status === 'upcoming' && (
-                    <div className="mt-8 pt-8 border-t border-slate-50 flex flex-wrap gap-4">
-                      <button 
-                        onClick={() => navigate(`/book/${booking.doctorId}`)}
-                        className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-8 py-3 bg-white border-2 border-slate-100 rounded-xl text-xs font-black text-slate-600 uppercase tracking-widest hover:bg-slate-50 transition"
-                      >
-                        <RefreshCw size={14} /> Reschedule
-                      </button>
-                      <button 
-                        onClick={() => setShowCancelConfirm(booking.id)}
-                        className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-8 py-3 bg-white border-2 border-red-50 rounded-xl text-xs font-black text-red-400 uppercase tracking-widest hover:bg-red-50 transition"
-                      >
-                        <Trash2 size={14} /> Cancel Appointment
-                      </button>
-                    </div>
-                  )}
+                  {/* Actions & Rating */}
+                  <div className="mt-10 pt-10 border-t border-slate-50 flex flex-col sm:flex-row items-center justify-between gap-6">
+                    {booking.status === 'upcoming' && (
+                      <div className="flex gap-4 w-full sm:w-auto">
+                        <button 
+                          onClick={() => navigate(`/book/${booking.doctorId}`)}
+                          className="flex-1 px-8 py-4 bg-slate-50 rounded-2xl text-[10px] font-black text-slate-600 uppercase tracking-widest hover:bg-blue-50 hover:text-[#1565C0] transition active:scale-95"
+                        >
+                          Reschedule
+                        </button>
+                        <button 
+                          onClick={() => setShowCancelConfirm(booking.id)}
+                          className="flex-1 px-8 py-4 bg-white border-2 border-red-50 rounded-2xl text-[10px] font-black text-red-400 uppercase tracking-widest hover:bg-red-50 transition active:scale-95"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    )}
+
+                    {booking.status === 'completed' && (
+                      <div className="w-full bg-slate-50 p-6 rounded-[32px] border border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <div className="flex items-center gap-4">
+                          <div className="bg-white p-3 rounded-2xl shadow-sm">
+                            <Star size={20} className="text-amber-400 fill-amber-400" />
+                          </div>
+                          <p className="text-[10px] font-black text-slate-600 uppercase tracking-widest">Rate your experience</p>
+                        </div>
+                        <div className="flex gap-2">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <button
+                              key={star}
+                              onClick={() => handleRate(booking.id, star)}
+                              className={`p-2 transition-all hover:scale-125 ${
+                                (ratings[booking.id] || 0) >= star ? 'text-amber-400' : 'text-slate-300'
+                              }`}
+                            >
+                              <Star size={24} fill={(ratings[booking.id] || 0) >= star ? 'currentColor' : 'none'} />
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {booking.status === 'cancelled' && (
+                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] italic">This appointment was cancelled</p>
+                    )}
+                  </div>
                 </motion.div>
               ))
             ) : (
               <motion.div 
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="text-center py-24 bg-white rounded-[40px] border-2 border-dashed border-slate-100"
+                className="text-center py-32 bg-white rounded-[64px] border-4 border-dashed border-slate-50"
               >
-                <div className="bg-slate-50 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <Calendar className="text-slate-200" size={48} />
-                </div>
-                <h3 className="text-2xl font-black text-slate-900 uppercase tracking-tight">No Appointments Found</h3>
-                <p className="text-slate-400 font-bold max-w-xs mx-auto mt-2">Book your first appointment with our verified specialists today.</p>
-                <Link to="/doctors" className="mt-8 inline-flex items-center gap-2 bg-[#1565C0] text-white px-10 py-4 rounded-2xl font-black shadow-xl shadow-blue-100 hover:bg-blue-800 transition">
-                  Find Doctors <Search size={20} />
+                <motion.div 
+                  animate={{ rotate: [0, 10, -10, 0] }}
+                  transition={{ duration: 4, repeat: Infinity }}
+                  className="bg-slate-50 w-32 h-32 rounded-full flex items-center justify-center mx-auto mb-8 shadow-inner"
+                >
+                  <Calendar className="text-slate-200" size={64} />
+                </motion.div>
+                <h3 className="text-3xl font-black text-slate-900 uppercase tracking-tight">Empty Calendar</h3>
+                <p className="text-slate-400 font-bold max-w-xs mx-auto mt-2 leading-relaxed">Your healing journey starts here. Book your first appointment with our verified specialists.</p>
+                <Link to="/doctors" className="mt-10 inline-flex items-center gap-3 bg-[#1565C0] text-white px-12 py-5 rounded-[24px] font-black uppercase tracking-widest text-xs shadow-2xl shadow-blue-200 hover:bg-blue-800 transition active:scale-95">
+                  Browse Doctors <Search size={20} />
                 </Link>
               </motion.div>
             )}
