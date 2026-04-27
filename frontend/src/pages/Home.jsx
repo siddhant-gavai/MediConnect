@@ -79,6 +79,8 @@ const Home = () => {
     date: ''
   });
   const [testimonialIndex, setTestimonialIndex] = useState(0);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [showCityChips, setShowCityChips] = useState(false);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -220,7 +222,97 @@ const Home = () => {
       {/* Already implemented in previous step */}
 
       {/* 4. SEARCH BAR SECTION */}
-      {/* ... keeping search as is for now, will update in commit 4 ... */}
+      <div className="max-w-5xl mx-auto px-4 -mt-16 relative z-30">
+        <div className="bg-white p-6 rounded-[32px] border border-blue-50 shadow-2xl space-y-6">
+          <div className="grid md:grid-cols-4 gap-4">
+            <div className="relative group">
+              <div className="flex items-center gap-3 px-6 py-4 bg-slate-50 rounded-2xl border border-transparent focus-within:border-[#1565C0] focus-within:bg-white transition-all">
+                <Search className="h-5 w-5 text-slate-400 group-focus-within:text-[#1565C0]" />
+                <input 
+                  type="text" 
+                  placeholder="Speciality (e.g. Cardiology)" 
+                  className="bg-transparent border-none outline-none text-sm font-black w-full text-slate-700 placeholder:text-slate-300"
+                  value={searchParams.speciality}
+                  onChange={(e) => setSearchParams({ ...searchParams, speciality: e.target.value })}
+                  onFocus={() => setShowSuggestions(true)}
+                />
+              </div>
+              {showSuggestions && searchParams.speciality && (
+                <div className="absolute top-full left-0 w-full mt-2 bg-white rounded-2xl shadow-2xl border border-slate-50 py-2 z-40 max-h-60 overflow-y-auto">
+                  {specialities
+                    .filter(s => s.name.toLowerCase().includes(searchParams.speciality.toLowerCase()))
+                    .map(s => (
+                      <button 
+                        key={s.name}
+                        onClick={() => {
+                          setSearchParams({ ...searchParams, speciality: s.name });
+                          setShowSuggestions(false);
+                        }}
+                        className="w-full text-left px-6 py-3 text-xs font-black text-slate-500 hover:bg-slate-50 hover:text-[#1565C0] transition uppercase tracking-widest"
+                      >
+                        {s.name}
+                      </button>
+                    ))
+                  }
+                </div>
+              )}
+            </div>
+
+            <div className="relative group">
+              <div className="flex items-center gap-3 px-6 py-4 bg-slate-50 rounded-2xl border border-transparent focus-within:border-[#1565C0] focus-within:bg-white transition-all">
+                <MapPin className="h-5 w-5 text-slate-400 group-focus-within:text-[#1565C0]" />
+                <input 
+                  type="text" 
+                  placeholder="Location" 
+                  className="bg-transparent border-none outline-none text-sm font-black w-full text-slate-700 placeholder:text-slate-300"
+                  value={searchParams.location}
+                  onChange={(e) => setSearchParams({ ...searchParams, location: e.target.value })}
+                  onFocus={() => setShowCityChips(true)}
+                />
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3 px-6 py-4 bg-slate-50 rounded-2xl border border-transparent focus-within:border-[#1565C0] focus-within:bg-white transition-all">
+              <Calendar className="h-5 w-5 text-slate-400 focus-within:text-[#1565C0]" />
+              <input 
+                type="date" 
+                className="bg-transparent border-none outline-none text-sm font-black w-full text-slate-700"
+                value={searchParams.date}
+                onChange={(e) => setSearchParams({ ...searchParams, date: e.target.value })}
+              />
+            </div>
+
+            <button 
+              onClick={handleSearch}
+              className="bg-[#1565C0] text-white py-4 rounded-2xl font-black uppercase tracking-widest hover:bg-blue-800 transition shadow-xl shadow-blue-100 flex items-center justify-center gap-2 active:scale-95"
+            >
+              <Search className="h-5 w-5" /> Search
+            </button>
+          </div>
+
+          {showCityChips && (
+            <div className="flex flex-wrap gap-2 animate-in fade-in slide-in-from-top-2 duration-300">
+              {['Mumbai', 'Delhi', 'Bangalore', 'Pune', 'Hyderabad', 'Chennai'].map(city => (
+                <button
+                  key={city}
+                  onClick={() => {
+                    setSearchParams({ ...searchParams, location: city });
+                    setShowCityChips(false);
+                  }}
+                  className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+                    searchParams.location === city 
+                      ? 'bg-[#1565C0] text-white shadow-lg shadow-blue-100' 
+                      : 'bg-slate-50 text-slate-400 hover:bg-blue-50 hover:text-[#1565C0]'
+                  }`}
+                >
+                  {city}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
 
       {/* 4. SPECIALITIES SECTION */}
       <section id="specialities" className="py-32 bg-white relative overflow-hidden">
