@@ -91,36 +91,6 @@ const DoctorProfile = () => {
               <div className="space-y-2">
                 <div className="flex flex-wrap items-center gap-3">
                   <h1 className="text-4xl font-black text-slate-900 tracking-tight">{doctor.name}</h1>
-                  <span className="px-4 py-1.5 bg-blue-50 text-[#1565C0] text-xs font-black uppercase tracking-widest rounded-full border border-blue-100">
-                    {doctor.speciality}
-                  </span>
-                </div>
-                <div className="flex items-center gap-4">
-                  <div className="flex items-center gap-1.5 bg-amber-50 px-3 py-1 rounded-lg border border-amber-100">
-                    <Star size={16} className="fill-amber-400 text-amber-400" />
-                    <span className="text-sm font-black text-amber-700">{doctor.rating}</span>
-                  </div>
-                  <span className="text-sm font-bold text-slate-400">({doctor.reviews} Patient Reviews)</span>
-                  <div className="flex items-center gap-1.5 text-slate-500">
-                    <MapPin size={16} />
-                    <span className="text-sm font-bold">{doctor.location}, India</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
-                <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Experience</p>
-                  <p className="text-lg font-black text-slate-900">{doctor.exp} Years</p>
-                </div>
-                <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Fee</p>
-                  <p className="text-lg font-black text-[#1565C0]">₹{doctor.fee}</p>
-                </div>
-                <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Satisfied Patients</p>
-                  <p className="text-lg font-black text-slate-900">98%</p>
-                </div>
                 <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100">
                   <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Availability</p>
                   <p className="text-lg font-black text-green-600">Available</p>

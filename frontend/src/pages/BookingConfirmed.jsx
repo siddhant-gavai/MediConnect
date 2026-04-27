@@ -109,12 +109,20 @@ const BookingConfirmed = () => {
         </div>
 
         <div className="flex flex-col sm:flex-row gap-4">
-          <Link 
-            to="/my-bookings" 
+          <button 
+            onClick={() => {
+              const text = `I just booked an appointment with Dr. ${booking.doctorName} on MediConnect!`;
+              if (navigator.share) {
+                navigator.share({ title: 'MediConnect Booking', text, url: window.location.origin });
+              } else {
+                navigator.clipboard.writeText(text);
+                showToast('Success! Message copied to clipboard', 'success');
+              }
+            }}
             className="flex-1 bg-white border-2 border-slate-100 px-8 py-4 rounded-2xl font-black text-slate-600 hover:bg-slate-50 transition flex items-center justify-center gap-2"
           >
-            <LayoutGrid size={20} /> View My Bookings
-          </Link>
+            Share Booking
+          </button>
           <Link 
             to="/doctors" 
             className="flex-1 bg-[#1565C0] text-white px-8 py-4 rounded-2xl font-black shadow-xl shadow-blue-100 hover:bg-blue-800 transition flex items-center justify-center gap-2"
@@ -132,9 +140,9 @@ const BookingConfirmed = () => {
         }
         .confetti {
           position: absolute;
-          width: 10px;
-          height: 10px;
-          background-color: #f2d74e;
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
           top: -10px;
           opacity: 0;
         }
