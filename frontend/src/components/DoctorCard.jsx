@@ -93,76 +93,88 @@ const DoctorCard = ({ doctor, buttonText = "Book Appointment" }) => {
                 Available Today
               </span>
             ) : (
-              <span className="px-2.5 py-1 bg-slate-50 text-slate-500 text-[10px] font-black uppercase tracking-widest rounded-full border border-slate-100">
-                Next: {doctor.slot}
-              </span>
+            <div className="h-24 w-24 rounded-3xl bg-[#1565C0] flex items-center justify-center text-white text-3xl font-black shadow-xl ring-4 ring-blue-50 group-hover:scale-105 transition-transform duration-500">
+              {doctor.name.split(' ').map(n => n[0]).join('').toUpperCase()}
+            </div>
+            {doctor.available && (
+              <div className="absolute -bottom-2 -right-2 bg-white p-1 rounded-full shadow-lg">
+                <div className="h-4 w-4 bg-[#10B981] rounded-full ring-2 ring-white animate-pulse" />
+              </div>
             )}
-            <span className="px-2.5 py-1 bg-blue-50 text-[#1565C0] text-[10px] font-black uppercase tracking-widest rounded-full border border-blue-100">
-              {doctor.speciality}
-            </span>
           </div>
+          <button 
+            onClick={toggleSave}
+            className={`p-3 rounded-2xl transition-all active:scale-90 ${
+              isSaved ? 'bg-red-50 text-red-500' : 'bg-slate-50 text-slate-300 hover:text-red-400'
+            }`}
+          >
+            <Heart size={20} fill={isSaved ? 'currentColor' : 'none'} strokeWidth={isSaved ? 0 : 2.5} />
+          </button>
         </div>
 
         {/* Content Section */}
-        <div className="space-y-3">
+        <div className="space-y-4">
           <div>
-            <div className="flex items-center gap-2">
-              <h3 className="text-lg font-black text-slate-900 leading-tight">
+            <div className="flex items-center gap-2 mb-1">
+              <h3 className="text-xl font-black text-slate-900 leading-tight group-hover:text-[#1565C0] transition-colors">
                 {doctor.name}
               </h3>
-              <CheckCircle2 size={16} className="text-blue-500 fill-blue-50" />
+              <CheckCircle2 size={18} className="text-[#1565C0] fill-blue-50" />
             </div>
-            <div className="flex items-center gap-2 mt-1">
+            <div className="flex items-center gap-2">
               {renderStars(doctor.rating)}
-              <span className="text-xs font-bold text-slate-400">
-                ({doctor.reviews} reviews)
+              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                {doctor.reviews} Reviews
               </span>
             </div>
           </div>
 
-          <div className="space-y-2">
-            <div className="flex items-center gap-2 text-slate-600">
-              <Building2 size={16} className="text-slate-400" />
-              <span className="text-sm font-bold truncate">{doctor.hospital}</span>
+          <div className="space-y-3">
+            <div className="flex items-center gap-2.5 text-slate-500">
+              <div className="p-1.5 bg-slate-50 rounded-lg">
+                <Building2 size={14} className="text-slate-400" />
+              </div>
+              <span className="text-xs font-bold truncate">{doctor.hospital}</span>
             </div>
-            <div className="flex items-center gap-2 text-slate-600">
-              <MapPin size={16} className="text-slate-400" />
-              <span className="text-sm font-bold">{doctor.location}, India</span>
+            <div className="flex items-center gap-2.5 text-slate-500">
+              <div className="p-1.5 bg-slate-50 rounded-lg">
+                <MapPin size={14} className="text-slate-400" />
+              </div>
+              <span className="text-xs font-bold">{doctor.location}, India</span>
             </div>
           </div>
 
           <div className="flex flex-wrap gap-2 pt-2">
-            <div className="px-3 py-2 bg-[#F0F9FF] rounded-xl flex items-center gap-2 border border-blue-100 group">
-              <Clock size={14} className="text-[#0288D1]" />
-              <span className="text-[10px] font-black text-[#0288D1] uppercase tracking-wider">
-                {doctor.exp} Years Exp
+            <div className="px-4 py-2 bg-blue-50 rounded-xl flex items-center gap-2 border border-blue-100">
+              <Clock size={12} className="text-[#1565C0]" />
+              <span className="text-[9px] font-black text-[#1565C0] uppercase tracking-widest">
+                {doctor.exp} Yrs Exp
               </span>
             </div>
-            <div className="px-3 py-2 bg-[#FDF2F8] rounded-xl flex items-center gap-2 border border-pink-100">
-              <IndianRupee size={14} className="text-pink-600" />
-              <span className="text-[10px] font-black text-pink-600 uppercase tracking-wider">
+            <div className="px-4 py-2 bg-pink-50 rounded-xl flex items-center gap-2 border border-pink-100">
+              <IndianRupee size={12} className="text-pink-600" />
+              <span className="text-[9px] font-black text-pink-600 uppercase tracking-widest">
                 ₹{doctor.fee}
               </span>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Footer Section: Actions */}
-      <div className="p-5 pt-0 mt-auto space-y-3">
-        <button
-          onClick={() => handleBooking(doctor.id)}
-          className="w-full bg-[#1565C0] text-white py-3.5 rounded-xl font-black text-sm flex items-center justify-center gap-2 hover:bg-blue-800 transition shadow-lg shadow-blue-100"
-        >
-          {buttonText}
-          <ArrowRight size={16} />
-        </button>
-        <Link
-          to={`/doctor/${doctor.id}`}
-          className="w-full text-center block text-sm font-black text-[#1565C0] hover:text-blue-800 transition uppercase tracking-widest py-1"
-        >
-          View Profile
-        </Link>
+        <div className="pt-4 space-y-3">
+          <button
+            onClick={() => navigate(`/book/${doctor.id}`)}
+            className="w-full bg-[#1565C0] text-white py-4 rounded-2xl font-black uppercase tracking-[0.1em] flex items-center justify-center gap-2 hover:bg-blue-800 transition shadow-xl shadow-blue-100 group-hover:shadow-blue-200"
+          >
+            {buttonText}
+            <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+          </button>
+          <Link
+            to={`/doctor/${doctor.id}`}
+            className="w-full py-4 rounded-2xl border-2 border-slate-50 text-slate-400 text-center font-black uppercase tracking-[0.1em] hover:bg-slate-50 hover:text-slate-600 transition block text-xs"
+          >
+            View Profile
+          </Link>
+        </div>
       </div>
     </motion.div>
   );
