@@ -73,43 +73,35 @@ const DoctorCard = ({ doctor, buttonText = "Book Appointment" }) => {
       <div className="p-5 flex-1 flex flex-col space-y-4">
         {/* Top Section: Avatar & Badges */}
         <div className="flex justify-between items-start">
-          <div className="relative">
-            <div className="h-16 w-16 rounded-full bg-[#1565C0] flex items-center justify-center text-white font-black text-xl shadow-inner shrink-0">
+          <div className="relative group/avatar">
+            <div className="h-16 w-16 rounded-full bg-gradient-to-br from-[#1565C0] to-[#0288D1] flex items-center justify-center text-white font-black text-xl shadow-lg shrink-0 group-hover/avatar:scale-105 transition-transform duration-300">
               {getInitials(doctor.name)}
             </div>
-            <button 
-              onClick={toggleSave}
-              className={`absolute -bottom-1 -right-1 p-1.5 rounded-full border-2 transition-all shadow-sm ${
-                isSaved ? 'bg-red-50 border-red-100 text-red-500' : 'bg-white border-slate-100 text-slate-300 hover:text-red-400'
-              }`}
-            >
-              <Heart size={14} className={isSaved ? 'fill-current' : ''} />
-            </button>
-          </div>
-          <div className="flex flex-col items-end gap-2">
-            {doctor.available ? (
-              <span className="px-2.5 py-1 bg-green-50 text-green-600 text-[10px] font-black uppercase tracking-widest rounded-full border border-green-100 flex items-center gap-1">
-                <span className="h-1.5 w-1.5 rounded-full bg-green-600 animate-pulse" />
-                Available Today
-              </span>
-            ) : (
-            <div className="h-24 w-24 rounded-3xl bg-[#1565C0] flex items-center justify-center text-white text-3xl font-black shadow-xl ring-4 ring-blue-50 group-hover:scale-105 transition-transform duration-500">
-              {doctor.name.split(' ').map(n => n[0]).join('').toUpperCase()}
-            </div>
             {doctor.available && (
-              <div className="absolute -bottom-2 -right-2 bg-white p-1 rounded-full shadow-lg">
-                <div className="h-4 w-4 bg-[#10B981] rounded-full ring-2 ring-white animate-pulse" />
+              <div className="absolute -bottom-1 -right-1 bg-white p-1 rounded-full shadow-md">
+                <div className="h-3.5 w-3.5 bg-[#10B981] rounded-full ring-2 ring-white animate-pulse" />
               </div>
             )}
           </div>
-          <button 
-            onClick={toggleSave}
-            className={`p-3 rounded-2xl transition-all active:scale-90 ${
-              isSaved ? 'bg-red-50 text-red-500' : 'bg-slate-50 text-slate-300 hover:text-red-400'
-            }`}
-          >
-            <Heart size={20} fill={isSaved ? 'currentColor' : 'none'} strokeWidth={isSaved ? 0 : 2.5} />
-          </button>
+          
+          <div className="flex flex-col items-end gap-3">
+            {doctor.available && (
+              <span className="px-3 py-1 bg-[#10B981]/10 text-[#10B981] text-[8px] font-black uppercase tracking-[0.15em] rounded-lg border border-[#10B981]/20 flex items-center gap-1.5 shadow-sm">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#10B981] shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+                Available Today
+              </span>
+            )}
+            <button 
+              onClick={toggleSave}
+              className={`p-2.5 rounded-2xl transition-all active:scale-90 border shadow-sm ${
+                isSaved 
+                  ? 'bg-red-50 border-red-100 text-red-500' 
+                  : 'bg-white border-slate-100 text-slate-300 hover:text-red-500 hover:border-red-100 hover:bg-red-50'
+              }`}
+            >
+              <Heart size={18} fill={isSaved ? 'currentColor' : 'none'} strokeWidth={isSaved ? 0 : 2.5} />
+            </button>
+          </div>
         </div>
 
         {/* Content Section */}
