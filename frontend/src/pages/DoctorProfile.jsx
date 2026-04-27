@@ -22,6 +22,7 @@ const DoctorProfile = () => {
     const foundDoctor = doctorsData.find(d => d.id === parseInt(id));
     if (foundDoctor) {
       setDoctor(foundDoctor);
+      document.title = `${foundDoctor.name} | MediConnect`;
     } else {
       navigate('/doctors');
     }

@@ -83,6 +83,7 @@ const Home = () => {
   const [showCityChips, setShowCityChips] = useState(false);
 
   useEffect(() => {
+    document.title = 'MediConnect | Find & Book the Best Doctors';
     const timer = setInterval(() => {
       setTestimonialIndex((prev) => (prev + 1) % 3);
     }, 4000);

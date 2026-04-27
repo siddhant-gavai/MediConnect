@@ -19,6 +19,7 @@ const MyBookings = () => {
   });
 
   useEffect(() => {
+    document.title = 'My Appointments | MediConnect';
     const savedBookings = JSON.parse(localStorage.getItem('mediconnect_bookings') || '[]');
     setBookings(savedBookings);
   }, []);

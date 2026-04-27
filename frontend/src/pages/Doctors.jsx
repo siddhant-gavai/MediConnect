@@ -25,6 +25,7 @@ const DoctorsPage = () => {
   const [showCompareModal, setShowCompareModal] = useState(false);
 
   useEffect(() => {
+    document.title = 'Find Doctors | MediConnect';
     const timer = setTimeout(() => setIsLoading(false), 600);
     return () => clearTimeout(timer);
   }, []);

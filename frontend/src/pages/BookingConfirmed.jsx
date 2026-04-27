@@ -9,6 +9,10 @@ const BookingConfirmed = () => {
   const { showToast } = useToast();
   const booking = location.state?.booking;
 
+  useEffect(() => {
+    document.title = 'Booking Confirmed | MediConnect';
+  }, []);
+
   if (!booking) return <Navigate to="/doctors" />;
 
   return (
