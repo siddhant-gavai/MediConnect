@@ -10,7 +10,7 @@
 
 ## ✨ Features
 
-- **High-End UI/UX**: Premium medical theme with glassmorphism and Framer Motion animations.
+- **High-End UI/UX**: Premium medical theme with glassmorphism, modern design, and Framer Motion animations.
 - **Search & Discovery**: Interactive doctor search with filters for speciality and availability.
 - **Appointment Lifecycle**: Complete flow from booking to status management (Pending, Confirmed, Completed).
 - **Multi-Role Dashboards**: Specialized interfaces for Patients, Doctors, and Administrators.
