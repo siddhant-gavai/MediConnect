@@ -40,7 +40,7 @@ function App() {
               <Route path="/doctors" element={<Doctors />} />
               <Route path="/doctor/:id" element={<DoctorProfile />} />
               
-              {/* Protected Routes */}
+              {/* Protected Routes - Requires Authentication */}
               <Route path="/book/:id" element={
                 <ProtectedRoute>
                   <BookAppointment />
