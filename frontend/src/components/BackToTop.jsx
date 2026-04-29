@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { ChevronUp } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+/**
+ * BackToTop component to scroll to the top of the page
+ */
 const BackToTop = () => {
   const [isVisible, setIsVisible] = useState(false);
 
