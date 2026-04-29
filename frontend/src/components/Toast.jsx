@@ -4,6 +4,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const ToastContext = createContext();
 
+/**
+ * ToastProvider context provider to manage application toasts
+ */
 export const ToastProvider = ({ children }) => {
   const [toasts, setToasts] = useState([]);
 
