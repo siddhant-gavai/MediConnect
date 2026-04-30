@@ -69,7 +69,7 @@ const Footer = () => {
           <div className="space-y-10">
             <h4 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-10">Download Our App</h4>
             <div className="space-y-4">
-              <button className="w-full bg-slate-800/50 p-4 rounded-2xl flex items-center gap-4 border border-slate-700 hover:bg-slate-800 hover:border-slate-600 transition group">
+              <button aria-label="Get it on Google Play" className="w-full bg-slate-800/50 p-4 rounded-2xl flex items-center gap-4 border border-slate-700 hover:bg-slate-800 hover:border-slate-600 transition group">
                 <div className="h-10 w-10 bg-black rounded-lg flex items-center justify-center">
                   <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center p-1">
                     <div className="w-full h-full bg-black rounded-full" />
@@ -80,7 +80,7 @@ const Footer = () => {
                   <p className="text-sm font-black text-white">Google Play</p>
                 </div>
               </button>
-              <button className="w-full bg-slate-800/50 p-4 rounded-2xl flex items-center gap-4 border border-slate-700 hover:bg-slate-800 hover:border-slate-600 transition group">
+              <button aria-label="Download on the App Store" className="w-full bg-slate-800/50 p-4 rounded-2xl flex items-center gap-4 border border-slate-700 hover:bg-slate-800 hover:border-slate-600 transition group">
                 <div className="h-10 w-10 bg-black rounded-lg flex items-center justify-center">
                   <div className="w-6 h-6 border-2 border-white rounded-md" />
                 </div>
