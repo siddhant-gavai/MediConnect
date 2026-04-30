@@ -93,6 +93,7 @@ const DoctorCard = ({ doctor, buttonText = "Book Appointment" }) => {
             )}
             <button 
               onClick={toggleSave}
+              aria-label={isSaved ? "Remove from saved doctors" : "Save doctor"}
               className={`p-2.5 rounded-2xl transition-all active:scale-90 border shadow-sm ${
                 isSaved 
                   ? 'bg-red-50 border-red-100 text-red-500' 
