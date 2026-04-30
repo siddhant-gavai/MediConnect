@@ -47,9 +47,9 @@ const DoctorCard = ({ doctor, buttonText = "Book Appointment" }) => {
     }
   };
 
-  const renderStars = (rating) => {
+  const renderStars = (rating = 0) => {
     return (
-      <div className="flex items-center gap-0.5">
+      <div className="flex items-center gap-0.5" aria-label={`Rating: ${rating} out of 5 stars`} title={`${rating} out of 5 stars`}>
         {[...Array(5)].map((_, i) => (
           <Star
             key={i}
