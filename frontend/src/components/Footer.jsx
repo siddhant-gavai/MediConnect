@@ -8,7 +8,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 mb-24">
           {/* Column 1: Brand */}
           <div className="space-y-8">
-            <Link to="/" className="flex items-center gap-3 group">
+            <Link to="/" title="MediConnect Home" className="flex items-center gap-3 group">
               <div className="bg-[#1565C0] p-3 rounded-2xl group-hover:rotate-12 transition-transform duration-500 shadow-lg shadow-blue-500/20">
                 <Stethoscope className="h-7 w-7 text-white" />
               </div>
