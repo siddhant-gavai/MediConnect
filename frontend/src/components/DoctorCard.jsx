@@ -117,7 +117,7 @@ const DoctorCard = ({ doctor, buttonText = "Book Appointment" }) => {
             <div className="flex items-center gap-2">
               {renderStars(doctor.rating)}
               <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                {doctor.reviews} Reviews
+                {doctor.reviews || 0} Reviews
               </span>
             </div>
           </div>
