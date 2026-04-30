@@ -74,7 +74,7 @@ const DoctorCard = ({ doctor, buttonText = "Book Appointment" }) => {
         {/* Top Section: Avatar & Badges */}
         <div className="flex justify-between items-start">
           <div className="relative group/avatar">
-            <div className="h-16 w-16 rounded-full bg-gradient-to-br from-[#1565C0] to-[#0288D1] flex items-center justify-center text-white font-black text-xl shadow-lg shrink-0 group-hover/avatar:scale-105 transition-transform duration-300">
+            <div title={doctor.name} className="h-16 w-16 rounded-full bg-gradient-to-br from-[#1565C0] to-[#0288D1] flex items-center justify-center text-white font-black text-xl shadow-lg shrink-0 group-hover/avatar:scale-105 transition-transform duration-300">
               {getInitials(doctor.name)}
             </div>
             {doctor.available && (
