@@ -102,8 +102,8 @@ const Footer = () => {
             © {new Date().getFullYear()} MediConnect Healthcare. All rights reserved.
           </p>
           <div className="flex items-center gap-8">
-            <Link to="#" className="text-slate-500 hover:text-white text-[10px] font-black uppercase tracking-widest transition-colors">Privacy</Link>
-            <Link to="#" className="text-slate-500 hover:text-white text-[10px] font-black uppercase tracking-widest transition-colors">Terms</Link>
+            <Link to="#" title="Privacy Policy" className="text-slate-500 hover:text-white text-[10px] font-black uppercase tracking-widest transition-colors">Privacy</Link>
+            <Link to="#" title="Terms of Service" className="text-slate-500 hover:text-white text-[10px] font-black uppercase tracking-widest transition-colors">Terms</Link>
             <div className="h-1 w-1 rounded-full bg-slate-800" />
             <p className="text-slate-500 text-[10px] font-black uppercase tracking-widest flex items-center gap-2">
               Built for <span className="text-[#1565C0] font-black">Digital India</span>
