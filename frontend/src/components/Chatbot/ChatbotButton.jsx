@@ -1,6 +1,11 @@
 import React from 'react';
 import { MessageSquare, X } from 'lucide-react';
 
+/**
+ * ChatbotButton Component
+ * A floating action button that toggles the AI Chatbot interface.
+ * Features a pulsing online indicator and hover tooltip.
+ */
 const ChatbotButton = ({ isOpen, onClick }) => {
   return (
     <div className="fixed bottom-[28px] right-[28px] z-[9999]">
