@@ -15,6 +15,7 @@ const DoctorCard = ({ doctor, buttonText = "Book Appointment" }) => {
     return saved.includes(doctor.id);
   });
 
+  // Toggles the saved state of a doctor in local storage
   const toggleSave = (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -31,6 +32,7 @@ const DoctorCard = ({ doctor, buttonText = "Book Appointment" }) => {
     setIsSaved(!isSaved);
   };
 
+  // Helper to get initials from a doctor's name
   const getInitials = (name) => {
     return name
       .split(' ')
@@ -39,6 +41,7 @@ const DoctorCard = ({ doctor, buttonText = "Book Appointment" }) => {
       .toUpperCase();
   };
 
+  // Handles navigation to the booking page, prompting login if necessary
   const handleBooking = (doctorId) => {
     if (isLoggedIn) {
       navigate(`/book/${doctorId}`);
