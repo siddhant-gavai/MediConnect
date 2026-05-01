@@ -1,3 +1,4 @@
+// Mock data for doctors
 const doctors = [
  { id:1,  name:"Dr. Anjali Sharma",   speciality:"Cardiology",    exp:12, rating:4.9, reviews:320, location:"Mumbai",    fee:800,  available:true,  slot:"Today 3:00 PM",   hospital:"Apollo Hospital",         edu:"MBBS, MD – AIIMS Delhi" },
  { id:2,  name:"Dr. Rohan Mehta",     speciality:"Neurology",     exp:9,  rating:4.8, reviews:210, location:"Delhi",     fee:1000, available:true,  slot:"Tomorrow 10:00 AM",hospital:"Fortis Hospital",         edu:"MBBS, DM – PGI Chandigarh" },
