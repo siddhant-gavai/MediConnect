@@ -11,6 +11,10 @@ import {
 import doctorsData from '../data/doctors';
 import DoctorCard from '../components/DoctorCard';
 
+/**
+ * Counter Component
+ * Animates a number counting up to the specified end value when scrolled into view.
+ */
 const Counter = ({ end, duration = 2 }) => {
   const [count, setCount] = useState(0);
   const ref = useRef(null);
