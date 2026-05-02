@@ -49,6 +49,7 @@ export const ToastProvider = ({ children }) => {
               <p className="text-xs font-black uppercase tracking-tight flex-1">{toast.message}</p>
               <button 
                 onClick={() => removeToast(toast.id)}
+                aria-label="Close toast"
                 className="p-1 hover:bg-black/5 rounded-lg transition"
               >
                 <X size={16} />
