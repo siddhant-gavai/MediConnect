@@ -3,7 +3,7 @@ import { Stethoscope, Github, Twitter, Linkedin, Facebook, MapPin, Phone, Mail, 
 
 const Footer = () => {
   return (
-    <footer className="bg-[#0F172A] text-white pt-24 pb-12">
+    <footer aria-label="Site Footer" className="bg-[#0F172A] text-white pt-24 pb-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 mb-24">
           {/* Column 1: Brand */}
