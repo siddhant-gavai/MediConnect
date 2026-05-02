@@ -166,6 +166,7 @@ const DoctorCard = ({ doctor, buttonText = "Book Appointment" }) => {
           </button>
           <Link
             to={`/doctor/${doctor.id}`}
+            aria-label={`View ${doctor.name}'s profile`}
             className="w-full py-4 rounded-2xl border-2 border-slate-50 text-slate-400 text-center font-black uppercase tracking-[0.1em] hover:bg-slate-50 hover:text-slate-600 transition block text-xs"
           >
             View Profile
