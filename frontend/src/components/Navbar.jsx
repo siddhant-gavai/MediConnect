@@ -83,7 +83,7 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
           
-          <Link to="/" className="flex items-center gap-2 group">
+          <Link to="/" title="Go to Home" className="flex items-center gap-2 group">
             <div className="p-2 bg-[#1565C0] rounded-xl relative overflow-hidden">
               <Stethoscope className="h-6 w-6 text-white animate-pulse-subtle" />
             </div>
