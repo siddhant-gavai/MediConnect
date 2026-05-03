@@ -10,12 +10,12 @@ const ToastContext = createContext();
 export const ToastProvider = ({ children }) => {
   const [toasts, setToasts] = useState([]);
 
-  const showToast = useCallback((message, type = 'info') => {
+  const showToast = useCallback((message, type = 'info', duration = 3000) => {
     const id = Date.now();
     setToasts((prev) => [...prev, { id, message, type }]);
     setTimeout(() => {
       removeToast(id);
-    }, 3000);
+    }, duration);
   }, []);
 
   const removeToast = useCallback((id) => {
