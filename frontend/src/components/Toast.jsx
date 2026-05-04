@@ -18,6 +18,7 @@ export const ToastProvider = ({ children }) => {
     }, duration);
   }, []);
 
+  // Function to remove a toast by its unique ID
   const removeToast = useCallback((id) => {
     setToasts((prev) => prev.filter((toast) => toast.id !== id));
   }, []);
