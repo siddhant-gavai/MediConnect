@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
  * BackToTop component to scroll to the top of the page
  */
 const BackToTop = () => {
+  // State to track whether the button should be visible based on scroll position
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
