@@ -50,6 +50,7 @@ const DoctorCard = ({ doctor, buttonText = "Book Appointment" }) => {
     }
   };
 
+  // Helper function to render a star rating component
   const renderStars = (rating = 0) => {
     return (
       <div className="flex items-center gap-0.5" aria-label={`Rating: ${rating} out of 5 stars`} title={`${rating} out of 5 stars`}>
