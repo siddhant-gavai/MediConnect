@@ -1,6 +1,10 @@
 import { Link } from 'react-router-dom';
 import { Stethoscope, Github, Twitter, Linkedin, Facebook, MapPin, Phone, Mail, Send } from 'lucide-react';
 
+/**
+ * Main Footer Component
+ * Contains site links, social media, contact info, and app download links.
+ */
 const Footer = () => {
   return (
     <footer aria-label="Site Footer" className="bg-[#0F172A] text-white pt-24 pb-12">
