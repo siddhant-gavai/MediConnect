@@ -8,7 +8,7 @@ import { useAuth } from '../context/AuthContext';
  */
 export default function ProtectedRoute({ children }) {
   const { isLoggedIn } = useAuth();
-  const location = useLocation();
+  const location = useLocation(); // Hook to get current location for redirect back
 
   if (!isLoggedIn) {
     // Save the page user was trying to visit
