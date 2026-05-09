@@ -28,12 +28,13 @@ function App() {
     <Router>
       <ToastProvider>
         <AuthProvider>
-          <div className="min-h-screen bg-white">
+          <div className="min-h-screen bg-white flex flex-col">
             <Navbar />
             <Chatbot />
             <BackToTop />
-            <Routes>
-              <Route path="/" element={<Home />} />
+            <main className="flex-grow">
+              <Routes>
+                <Route path="/" element={<Home />} />
               <Route path="/signin" element={<SignIn />} />
               <Route path="/register" element={<Register />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -88,6 +89,7 @@ function App() {
                 </ProtectedRoute>
               } />
             </Routes>
+            </main>
             <Footer />
           </div>
         </AuthProvider>
