@@ -1,5 +1,9 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 
+/**
+ * AuthContext provides user authentication state and methods
+ * for login, logout, and checking if the user is authenticated.
+ */
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
