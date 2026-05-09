@@ -6,6 +6,10 @@ const { prisma } = require('../config/prisma');
 const addReview = async (req, res, next) => {
   const { doctorId, appointmentId, rating, comment } = req.body;
 
+  if (!doctorId || !appointmentId || !rating) {
+    return res.status(400).json({ success: false, message: 'Please provide doctorId, appointmentId, and rating' });
+  }
+
   try {
     const appointment = await prisma.appointment.findUnique({
       where: { id: appointmentId }
