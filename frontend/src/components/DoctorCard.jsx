@@ -142,13 +142,13 @@ const DoctorCard = ({ doctor, buttonText = "Book Appointment" }) => {
           </div>
 
           <div className="flex flex-wrap gap-2 pt-2">
-            <div className="px-4 py-2 bg-blue-50 rounded-xl flex items-center gap-2 border border-blue-100">
+            <div className="px-4 py-2 bg-blue-50 rounded-xl flex items-center gap-2 border border-blue-100" title="Experience">
               <Clock size={12} className="text-[#1565C0]" />
               <span className="text-[9px] font-black text-[#1565C0] uppercase tracking-widest">
                 {doctor.exp} Yrs Exp
               </span>
             </div>
-            <div className="px-4 py-2 bg-pink-50 rounded-xl flex items-center gap-2 border border-pink-100">
+            <div className="px-4 py-2 bg-pink-50 rounded-xl flex items-center gap-2 border border-pink-100" title="Consultation Fee">
               <IndianRupee size={12} className="text-pink-600" />
               <span className="text-[9px] font-black text-pink-600 uppercase tracking-widest">
                 ₹{doctor.fee}
