@@ -103,7 +103,10 @@ const ManageDoctors = () => {
             </tbody>
           </table>
           {users.length === 0 && (
-            <div className="py-20 text-center text-slate-400 font-medium">No doctors registered yet</div>
+            <div className="py-20 flex flex-col items-center justify-center text-center">
+              <User size={48} className="text-slate-200 mb-4" />
+              <div className="text-slate-400 font-medium">No doctors registered yet</div>
+            </div>
           )}
         </div>
       </div>
