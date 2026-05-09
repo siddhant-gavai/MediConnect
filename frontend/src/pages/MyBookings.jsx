@@ -72,6 +72,7 @@ const MyBookings = () => {
             {['All', 'Upcoming', 'Completed', 'Cancelled'].map(tab => (
               <button
                 key={tab}
+                aria-label={`View ${tab} appointments`}
                 onClick={() => setActiveTab(tab)}
                 className={`px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all ${
                   activeTab === tab ? 'bg-[#1565C0] text-white shadow-lg shadow-blue-200' : 'text-slate-400 hover:text-slate-600'
