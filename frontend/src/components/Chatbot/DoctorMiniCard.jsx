@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 const DoctorMiniCard = ({ doctor }) => {
   const navigate = useNavigate();
 
+  // Get doctor initials for avatar fallback
   const getInitials = (name) => {
     return name
       .split(' ')
