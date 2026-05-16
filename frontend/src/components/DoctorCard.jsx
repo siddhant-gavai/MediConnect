@@ -104,7 +104,7 @@ const DoctorCard = ({ doctor, buttonText = "Book Appointment" }) => {
                   : 'bg-white border-slate-100 text-slate-300 hover:text-red-500 hover:border-red-100 hover:bg-red-50'
               }`}
             >
-              <Heart size={18} fill={isSaved ? 'currentColor' : 'none'} strokeWidth={isSaved ? 0 : 2.5} />
+              <Heart size={20} fill={isSaved ? 'currentColor' : 'none'} strokeWidth={isSaved ? 0 : 2.5} />
             </button>
           </div>
         </div>
