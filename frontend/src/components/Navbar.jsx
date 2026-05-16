@@ -105,7 +105,7 @@ const Navbar = () => {
                 >
                   {link.name}
                   {link.badge && upcomingCount > 0 && (
-                    <span className="h-2 w-2 rounded-full bg-[#1565C0] animate-pulse shadow-sm shadow-blue-200" />
+                    <span className="h-2.5 w-2.5 rounded-full bg-[#1565C0] animate-pulse shadow-sm shadow-blue-200" />
                   )}
                 </NavLink>
               ) : (
