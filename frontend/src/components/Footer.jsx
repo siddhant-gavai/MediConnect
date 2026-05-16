@@ -30,7 +30,7 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Column 2: Quick Links */}
+          {/* Column 2: Platform Links */}
           <div>
             <h4 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-10">Platform</h4>
             <ul className="space-y-5">
