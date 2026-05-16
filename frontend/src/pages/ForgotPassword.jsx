@@ -16,7 +16,7 @@ const ForgotPassword = () => {
     setTimeout(() => {
       setLoading(false);
       setSubmitted(true);
-    }, 1000);
+    }, 1500);
   };
 
   return (
