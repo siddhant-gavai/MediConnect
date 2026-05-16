@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 /**
  * ProtectedRoute Component
  * Wraps routes that require user authentication. If the user is not logged in,
- * it redirects them to the sign-in page while preserving their intended destination.
+ * it redirects them to the sign-in page while preserving their intended destination for better UX.
  */
 export default function ProtectedRoute({ children }) {
   const { isLoggedIn } = useAuth();
