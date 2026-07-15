@@ -3,10 +3,13 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const dotenv = require('dotenv');
 const { prisma } = require('./config/prisma');
+const requestLogger = require('./middleware/requestLogger');
 
 dotenv.config();
 
 const app = express();
+
+app.use(requestLogger);
 
 // Middleware
 const allowedOrigins = [
