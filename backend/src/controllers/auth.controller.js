@@ -2,11 +2,26 @@ const bcrypt = require('bcryptjs');
 const { prisma } = require('../config/prisma');
 const generateToken = require('../utils/generateToken');
 
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const isValidEmail = (email) => emailRegex.test(email);
+
 // @desc Register a new user
 // @route POST /api/auth/register
 // @access Public
 const register = async (req, res, next) => {
   const { name, email, password, role } = req.body;
+
+  if (!name || !email || !password) {
+    return res.status(400).json({ success: false, message: 'All required fields (name, email, password) must be filled' });
+  }
+
+  if (!isValidEmail(email)) {
+    return res.status(400).json({ success: false, message: 'Please provide a valid email address' });
+  }
+
+  if (password.length < 6) {
+    return res.status(400).json({ success: false, message: 'Password must be at least 6 characters long' });
+  }
 
   try {
     const userExists = await prisma.user.findUnique({ where: { email } });
@@ -48,6 +63,14 @@ const register = async (req, res, next) => {
 // @access Public
 const login = async (req, res, next) => {
   const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).json({ success: false, message: 'Please provide both email and password' });
+  }
+
+  if (!isValidEmail(email)) {
+    return res.status(400).json({ success: false, message: 'Please provide a valid email address' });
+  }
 
   try {
     const user = await prisma.user.findUnique({ where: { email } });
