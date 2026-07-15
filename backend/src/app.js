@@ -4,6 +4,7 @@ const cookieParser = require('cookie-parser');
 const dotenv = require('dotenv');
 const { prisma } = require('./config/prisma');
 const requestLogger = require('./middleware/requestLogger');
+const { sendError } = require('./utils/responseHelper');
 
 dotenv.config();
 
@@ -71,7 +72,10 @@ app.use((err, req, res, next) => {
   console.error(err.stack);
   const status = err.statusCode || 500;
   const message = err.message || 'Internal Server Error';
-  res.status(status).json({ success: false, message });
+  
+  // Conditionally include stack trace in development
+  const errors = process.env.NODE_ENV === 'development' ? { stack: err.stack } : null;
+  return sendError(res, message, status, errors);
 });
 
 const PORT = process.env.PORT || 5000;
