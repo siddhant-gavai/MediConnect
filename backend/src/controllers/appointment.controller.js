@@ -1,4 +1,5 @@
 const { prisma } = require('../config/prisma');
+const { sendSuccess, sendError } = require('../utils/responseHelper');
 
 // @desc Book an appointment
 // @route POST /api/appointments
@@ -37,9 +38,9 @@ const bookAppointment = async (req, res, next) => {
       return appointment;
     });
 
-    res.status(201).json({ success: true, data: result });
+    return sendSuccess(res, result, 'Appointment booked successfully', 201);
   } catch (error) {
-    res.status(400).json({ success: false, message: error.message });
+    return sendError(res, error.message, 400);
   }
 };
 
@@ -57,7 +58,7 @@ const getMyAppointments = async (req, res, next) => {
       },
       orderBy: { createdAt: 'desc' }
     });
-    res.json({ success: true, data: appointments });
+    return sendSuccess(res, appointments, 'Appointments retrieved successfully');
   } catch (error) {
     next(error);
   }
@@ -73,7 +74,7 @@ const getDoctorAppointments = async (req, res, next) => {
     });
 
     if (!doctorProfile) {
-      return res.status(404).json({ success: false, message: 'Doctor profile not found' });
+      return sendError(res, 'Doctor profile not found', 404);
     }
 
     const appointments = await prisma.appointment.findMany({
@@ -84,7 +85,7 @@ const getDoctorAppointments = async (req, res, next) => {
       },
       orderBy: { createdAt: 'desc' }
     });
-    res.json({ success: true, data: appointments });
+    return sendSuccess(res, appointments, 'Doctor appointments retrieved successfully');
   } catch (error) {
     next(error);
   }
@@ -96,6 +97,11 @@ const getDoctorAppointments = async (req, res, next) => {
 const updateStatus = async (req, res, next) => {
   const { status } = req.body;
 
+  const allowedStatuses = ['PENDING', 'CONFIRMED', 'CANCELLED', 'COMPLETED'];
+  if (!status || !allowedStatuses.includes(status)) {
+    return sendError(res, `Invalid status. Allowed values are: ${allowedStatuses.join(', ')}`, 400);
+  }
+
   try {
     const appointment = await prisma.appointment.findUnique({
       where: { id: req.params.id },
@@ -103,7 +109,7 @@ const updateStatus = async (req, res, next) => {
     });
 
     if (!appointment) {
-      return res.status(404).json({ success: false, message: 'Appointment not found' });
+      return sendError(res, 'Appointment not found', 404);
     }
 
     // RBAC: Only doctor of this appointment or the patient can update status
@@ -113,7 +119,7 @@ const updateStatus = async (req, res, next) => {
       data: { status }
     });
 
-    res.json({ success: true, data: updatedAppointment });
+    return sendSuccess(res, updatedAppointment, 'Appointment status updated successfully');
   } catch (error) {
     next(error);
   }
