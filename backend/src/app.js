@@ -37,6 +37,26 @@ const appointmentRoutes = require('./routes/appointment.routes');
 const adminRoutes = require('./routes/admin.routes');
 const reviewRoutes = require('./routes/review.routes');
 
+app.get('/api/health', async (req, res) => {
+  try {
+    await prisma.$queryRaw`SELECT 1`;
+    res.status(200).json({
+      success: true,
+      status: 'UP',
+      timestamp: new Date(),
+      uptime: process.uptime(),
+      database: 'connected'
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      status: 'DOWN',
+      timestamp: new Date(),
+      error: error.message
+    });
+  }
+});
+
 app.use('/api/auth', authRoutes);
 app.use('/api/doctors', doctorRoutes);
 app.use('/api/appointments', appointmentRoutes);
