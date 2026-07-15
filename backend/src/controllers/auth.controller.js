@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs');
 const { prisma } = require('../config/prisma');
 const generateToken = require('../utils/generateToken');
+const { sendSuccess, sendError } = require('../utils/responseHelper');
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const isValidEmail = (email) => emailRegex.test(email);
@@ -12,21 +13,21 @@ const register = async (req, res, next) => {
   const { name, email, password, role } = req.body;
 
   if (!name || !email || !password) {
-    return res.status(400).json({ success: false, message: 'All required fields (name, email, password) must be filled' });
+    return sendError(res, 'All required fields (name, email, password) must be filled', 400);
   }
 
   if (!isValidEmail(email)) {
-    return res.status(400).json({ success: false, message: 'Please provide a valid email address' });
+    return sendError(res, 'Please provide a valid email address', 400);
   }
 
   if (password.length < 6) {
-    return res.status(400).json({ success: false, message: 'Password must be at least 6 characters long' });
+    return sendError(res, 'Password must be at least 6 characters long', 400);
   }
 
   try {
     const userExists = await prisma.user.findUnique({ where: { email } });
     if (userExists) {
-      return res.status(400).json({ success: false, message: 'User already exists' });
+      return sendError(res, 'User already exists', 400);
     }
 
     const salt = await bcrypt.genSalt(10);
@@ -43,15 +44,12 @@ const register = async (req, res, next) => {
 
     if (user) {
       generateToken(res, user.id);
-      res.status(201).json({
-        success: true,
-        data: {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          role: user.role
-        }
-      });
+      return sendSuccess(res, {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role
+      }, 'User registered successfully', 201);
     }
   } catch (error) {
     next(error);
@@ -65,28 +63,25 @@ const login = async (req, res, next) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return res.status(400).json({ success: false, message: 'Please provide both email and password' });
+    return sendError(res, 'Please provide both email and password', 400);
   }
 
   if (!isValidEmail(email)) {
-    return res.status(400).json({ success: false, message: 'Please provide a valid email address' });
+    return sendError(res, 'Please provide a valid email address', 400);
   }
 
   try {
     const user = await prisma.user.findUnique({ where: { email } });
     if (user && (await bcrypt.compare(password, user.password))) {
       generateToken(res, user.id);
-      res.json({
-        success: true,
-        data: {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          role: user.role
-        }
-      });
+      return sendSuccess(res, {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role
+      }, 'Login successful');
     } else {
-      res.status(401).json({ success: false, message: 'Invalid email or password' });
+      return sendError(res, 'Invalid email or password', 401);
     }
   } catch (error) {
     next(error);
@@ -97,7 +92,7 @@ const login = async (req, res, next) => {
 // @route GET /api/auth/me
 // @access Private
 const getMe = async (req, res, next) => {
-  res.json({ success: true, data: req.user });
+  return sendSuccess(res, req.user, 'Profile retrieved successfully');
 };
 
 // @desc Logout user / clear cookie
@@ -108,7 +103,7 @@ const logout = (req, res) => {
     httpOnly: true,
     expires: new Date(0)
   });
-  res.json({ success: true, message: 'Logged out successfully' });
+  return sendSuccess(res, null, 'Logged out successfully');
 };
 
 module.exports = { register, login, getMe, logout };
