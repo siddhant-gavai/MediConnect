@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { setDocumentTitle } from '../utils/titleHelper';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Search, Filter, MapPin, Star, Clock, IndianRupee, 
@@ -25,7 +26,7 @@ const DoctorsPage = () => {
   const [showCompareModal, setShowCompareModal] = useState(false);
 
   useEffect(() => {
-    document.title = 'Find Doctors | MediConnect';
+    setDocumentTitle('Find Doctors');
     const timer = setTimeout(() => setIsLoading(false), 600);
     return () => clearTimeout(timer);
   }, []);

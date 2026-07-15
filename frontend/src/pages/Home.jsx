@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { setDocumentTitle } from '../utils/titleHelper';
 import { motion, AnimatePresence, useInView } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../api/axios';
@@ -87,7 +88,7 @@ const Home = () => {
   const [showCityChips, setShowCityChips] = useState(false);
 
   useEffect(() => {
-    document.title = 'MediConnect | Find & Book the Best Doctors';
+    setDocumentTitle('Find & Book the Best Doctors');
     const timer = setInterval(() => {
       setTestimonialIndex((prev) => (prev + 1) % 3);
     }, 4000);
